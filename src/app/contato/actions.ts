@@ -7,14 +7,17 @@ import { createServiceClient } from "@/lib/supabase/service";
 const GENERIC_ERROR = "Não foi possível enviar agora. Tente novamente ou fale pelo WhatsApp.";
 
 export async function submitLead(_prev: LeadState, formData: FormData): Promise<LeadState> {
-  const v = validateLead({
+  const raw = {
     topico: formData.get("topico"),
     nome: formData.get("nome"),
     whatsapp: formData.get("whatsapp"),
     mensagem: formData.get("mensagem"),
     website: formData.get("website"),
-  });
-  if (!v.ok) return { status: "error", errors: v.errors };
+  };
+  const s = (x: unknown) => (typeof x === "string" ? x : "");
+  const values = { topico: s(raw.topico), nome: s(raw.nome), whatsapp: s(raw.whatsapp), mensagem: s(raw.mensagem) };
+  const v = validateLead(raw);
+  if (!v.ok) return { status: "error", errors: v.errors, values };
   // Honeypot: finge sucesso, sem gravar nem enviar e-mail.
   if (v.data.website.trim() !== "") return { status: "ok" };
 
@@ -32,7 +35,7 @@ export async function submitLead(_prev: LeadState, formData: FormData): Promise<
     id = (data as { id: string }).id;
   } catch {
     console.error("[leads] falha ao gravar lead");
-    return { status: "error", errors: { form: GENERIC_ERROR } };
+    return { status: "error", errors: { form: GENERIC_ERROR }, values };
   }
 
   // 2) Aviso por e-mail: best effort; falha so e logada (sem conteudo do lead).

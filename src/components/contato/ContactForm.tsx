@@ -18,22 +18,22 @@ export function ContactForm() {
   const [state, action, pending] = useActionState(submitLead, INITIAL);
   const err = state.errors ?? {};
 
-  if (state.status === "ok") {
-    return (
-      <p role="status" className="form-ok">
-        Enviado com sucesso! Em breve retornaremos o contato.
-      </p>
-    );
-  }
+  const v = state.values;
+  const ok = state.status === "ok";
 
   return (
+    <>
+    <div role="status" aria-live="polite" className="form-ok">
+      {ok ? "Enviado com sucesso! Em breve retornaremos o contato." : ""}
+    </div>
+    {ok ? null : (
     <form action={action} className="contact-form" noValidate>
       <fieldset className="chips-set" aria-describedby={err.topico ? "err-topico" : undefined}>
         <legend>Assunto</legend>
         <div className="chips" role="radiogroup" aria-label="Assunto">
           {TOPICOS.map((t, i) => (
             <label key={t} className="chip chip-radio">
-              <input type="radio" name="topico" value={t} defaultChecked={i === 0} />
+              <input type="radio" name="topico" value={t} defaultChecked={v?.topico ? v.topico === t : i === 0} />
               <span>{t}</span>
             </label>
           ))}
@@ -45,6 +45,7 @@ export function ContactForm() {
       <input
         id="cf-nome"
         name="nome"
+        defaultValue={v?.nome}
         autoComplete="name"
         maxLength={LIMITS.nome}
         placeholder="Seu nome"
@@ -57,6 +58,7 @@ export function ContactForm() {
       <input
         id="cf-whatsapp"
         name="whatsapp"
+        defaultValue={v?.whatsapp}
         type="tel"
         inputMode="tel"
         autoComplete="tel"
@@ -71,6 +73,7 @@ export function ContactForm() {
       <textarea
         id="cf-mensagem"
         name="mensagem"
+        defaultValue={v?.mensagem}
         rows={5}
         maxLength={LIMITS.mensagem}
         placeholder="Conte sobre a sua obra"
@@ -99,5 +102,7 @@ export function ContactForm() {
         </button>
       </div>
     </form>
+    )}
+    </>
   );
 }

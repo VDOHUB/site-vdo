@@ -34,6 +34,7 @@ export async function sendLeadEmail(l: EmailLead): Promise<void> {
     method: "POST",
     headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
     body: JSON.stringify({ from, to: [to], ...buildLeadEmail(l) }),
+    signal: AbortSignal.timeout(5000),
   });
   if (!res.ok) throw new Error(`Resend respondeu ${res.status}`);
 }

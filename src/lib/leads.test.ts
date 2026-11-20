@@ -84,6 +84,9 @@ describe("validateLead", () => {
     ["629924458812", false],
     ["(62) 9924-4588", true],
     ["", false],
+    ["+55 62 99244-5881", true],
+    ["+55 (62) 9924-4588", true],
+    ["55 62 99244-5881 1", false],
   ])("whatsapp %s -> %s", (w, ok) => {
     const r = validateLead({ ...valid, whatsapp: w });
     expect(r.ok).toBe(ok);
@@ -123,6 +126,20 @@ describe("submitLead", () => {
     const logged = JSON.stringify((console.error as ReturnType<typeof vi.fn>).mock.calls);
     expect(logged).not.toContain("Maria");
     expect(logged).not.toContain("Quero reformar");
+  });
+  it("fetch abortado/timeout no e-mail e engolido, logado so com o id", async () => {
+    emailImpl = async () => {
+      throw new DOMException("The operation timed out", "TimeoutError");
+    };
+    const r = await submitLead({ status: "idle" }, fd(valid));
+    expect(r).toEqual({ status: "ok" });
+    const calls = (console.error as ReturnType<typeof vi.fn>).mock.calls;
+    expect(JSON.stringify(calls)).toContain("abc");
+    expect(JSON.stringify(calls)).not.toContain("Maria");
+  });
+  it("erro de validacao devolve os valores digitados", async () => {
+    const r = await submitLead({ status: "idle" }, fd({ ...valid, nome: "", topico: "Dúvidas" }));
+    expect(r.values).toEqual({ topico: "Dúvidas", nome: "", whatsapp: "(62) 99244-5881", mensagem: "Quero reformar" });
   });
   it("falha no banco retorna erro generico e nao envia e-mail", async () => {
     insertResult = { data: null, error: { message: "secret detail" } };

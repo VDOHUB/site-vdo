@@ -14,7 +14,14 @@ export type LeadInput = {
   website: string;
 };
 
-export type LeadState = { status: "idle" | "ok" | "error"; errors?: Record<string, string> };
+export type LeadValues = { topico: string; nome: string; whatsapp: string; mensagem: string };
+
+export type LeadState = {
+  status: "idle" | "ok" | "error";
+  errors?: Record<string, string>;
+  /** Valores enviados (sem o honeypot), devolvidos em erro para o formulario nao limpar. */
+  values?: LeadValues;
+};
 
 export type LeadValidation =
   | { ok: true; data: LeadInput }
@@ -41,7 +48,11 @@ export function validateLead(input: unknown): LeadValidation {
   const nome = str(o.nome).trim();
   if (!nome) errors.nome = "Informe seu nome.";
   else if (nome.length > LIMITS.nome) errors.nome = `O nome pode ter no máximo ${LIMITS.nome} caracteres.`;
-  const whatsapp = str(o.whatsapp).replace(/\D/g, "");
+  let whatsapp = str(o.whatsapp).replace(/\D/g, "");
+  // Codigo do pais (+55): 12 a 13 digitos comecando com 55.
+  if ((whatsapp.length === 12 || whatsapp.length === 13) && whatsapp.startsWith("55")) {
+    whatsapp = whatsapp.slice(2);
+  }
   if (whatsapp.length < 10 || whatsapp.length > 11) {
     errors.whatsapp = "Informe um WhatsApp com DDD (10 ou 11 dígitos).";
   }
