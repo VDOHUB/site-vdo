@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",
-    "e2e": "playwright test"
+    "e2e": "playwright test",
+    "e2e:admin": "node scripts/e2e-admin.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",
