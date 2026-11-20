@@ -58,9 +58,20 @@ describe("listObras", () => {
     expect(calls).toEqual([]);
   });
 
-  it("retorna [] em erro", async () => {
+  it("retorna [] e registra em erro", async () => {
+    const spy = vi.spyOn(console, "error").mockImplementation(() => {});
     result = { data: null, error: { message: "x" } };
     expect(await listObras({})).toEqual([]);
+    expect(spy).toHaveBeenCalledWith("[obras] listObras failed", { message: "x" });
+    spy.mockRestore();
+  });
+
+  it("nao registra quando env ausente", async () => {
+    const spy = vi.spyOn(console, "error").mockImplementation(() => {});
+    delete process.env.NEXT_PUBLIC_SUPABASE_URL;
+    await listObras({});
+    expect(spy).not.toHaveBeenCalled();
+    spy.mockRestore();
   });
 });
 
@@ -81,6 +92,20 @@ describe("getObra", () => {
     expect((await getObra("a"))?.fotos).toEqual([]);
   });
 
+  it("registra erro, mas nao registra not-found nem nao publicada", async () => {
+    const spy = vi.spyOn(console, "error").mockImplementation(() => {});
+    result = { data: null, error: { message: "boom" } };
+    expect(await getObra("a")).toBeNull();
+    expect(spy).toHaveBeenCalledWith("[obras] getObra failed", { message: "boom" });
+    spy.mockClear();
+    result = { data: null, error: null };
+    await getObra("a");
+    result = { data: { slug: "a", publicado: false, obra_fotos: [] }, error: null };
+    await getObra("a");
+    expect(spy).not.toHaveBeenCalled();
+    spy.mockRestore();
+  });
+
   it("null quando nao existe, nao publicada ou sem env", async () => {
     result = { data: null, error: null };
     expect(await getObra("x")).toBeNull();
@@ -99,6 +124,17 @@ describe("photoUrl", () => {
     expect(photoUrl("dunas-douradas/3-800.avif", 1100)).toBe("/obras/dunas-douradas/3-800.webp");
     expect(photoUrl("dunas-douradas/3-800.avif", 1300)).toBe("/obras/dunas-douradas/3-1600.webp");
     expect(photoUrl("dunas-douradas/3-800.avif", 3000)).toBe("/obras/dunas-douradas/3-1600.webp");
+  });
+
+  it("uploads sem env caem para a pasta estatica", () => {
+    delete process.env.NEXT_PUBLIC_SUPABASE_URL;
+    expect(photoUrl("uploads/x/y.jpg", 800)).toBe("/obras/uploads/x/y.jpg");
+  });
+
+  it("neutraliza .. e barra inicial", () => {
+    expect(photoUrl("../../etc/passwd", 800)).toBe("/obras/etc/passwd");
+    expect(photoUrl("/uploads/../a/b.jpg", 800)).toBe("https://abc.supabase.co/storage/v1/object/public/obras/uploads/a/b.jpg");
+    expect(photoUrl("a/../../dunas-douradas/3-1600.webp", 800)).toBe("/obras/a/dunas-douradas/3-800.webp");
   });
 
   it("uploads resolvem para o Storage publico, sem alteracao", () => {
