@@ -1,0 +1,218 @@
+{
+  "hero": {
+    "source": "VIVERDEOBRA(V.3).mp4"
+  },
+  "obras": [
+    {
+      "slug": "dunas-douradas",
+      "title": "Dunas Douradas",
+      "tipo": "residencial",
+      "folderMatch": "Dunas Douradas",
+      "images": [
+        {
+          "source": "FotosViverdaObra-1.jpg",
+          "order": 1,
+          "alt": "Dunas Douradas, projeto residencial, foto 1"
+        },
+        {
+          "source": "FotosViverdaObra-2.jpg",
+          "order": 2,
+          "alt": "Dunas Douradas, projeto residencial, foto 2"
+        },
+        {
+          "source": "FotosViverdaObra-3.jpg",
+          "order": 3,
+          "alt": "Dunas Douradas, projeto residencial, foto 3"
+        },
+        {
+          "source": "FotosViverdaObra-4.jpg",
+          "order": 4,
+          "alt": "Dunas Douradas, projeto residencial, foto 4"
+        },
+        {
+          "source": "FotosViverdaObra-5.jpg",
+          "order": 5,
+          "alt": "Dunas Douradas, projeto residencial, foto 5"
+        },
+        {
+          "source": "FotosViverdaObra-6.jpg",
+          "order": 6,
+          "alt": "Dunas Douradas, projeto residencial, foto 6"
+        },
+        {
+          "source": "FotosViverdaObra-7.jpg",
+          "order": 7,
+          "alt": "Dunas Douradas, projeto residencial, foto 7"
+        },
+        {
+          "source": "FotosViverdaObra-8.jpg",
+          "order": 8,
+          "alt": "Dunas Douradas, projeto residencial, foto 8"
+        },
+        {
+          "source": "FotosViverdaObra-9.jpg",
+          "order": 9,
+          "alt": "Dunas Douradas, projeto residencial, foto 9"
+        },
+        {
+          "source": "FotosViverdaObra-10.jpg",
+          "order": 10,
+          "alt": "Dunas Douradas, projeto residencial, foto 10"
+        },
+        {
+          "source": "FotosViverdaObra-11.jpg",
+          "order": 11,
+          "alt": "Dunas Douradas, projeto residencial, foto 11"
+        },
+        {
+          "source": "FotosViverdaObra-12.jpg",
+          "order": 12,
+          "alt": "Dunas Douradas, projeto residencial, foto 12"
+        },
+        {
+          "source": "FotosViverdaObra-13.jpg",
+          "order": 13,
+          "alt": "Dunas Douradas, projeto residencial, foto 13"
+        },
+        {
+          "source": "FotosViverdaObra-14.jpg",
+          "order": 14,
+          "alt": "Dunas Douradas, projeto residencial, foto 14"
+        },
+        {
+          "source": "FotosViverdaObra-15.jpg",
+          "order": 15,
+          "alt": "Dunas Douradas, projeto residencial, foto 15"
+        },
+        {
+          "source": "FotosViverdaObra-16.jpg",
+          "order": 16,
+          "alt": "Dunas Douradas, projeto residencial, foto 16"
+        },
+        {
+          "source": "FotosViverdaObra-17.jpg",
+          "order": 17,
+          "alt": "Dunas Douradas, projeto residencial, foto 17"
+        },
+        {
+          "source": "FotosViverdaObra-18.jpg",
+          "order": 18,
+          "alt": "Dunas Douradas, projeto residencial, foto 18"
+        },
+        {
+          "source": "FotosViverdaObra-19.jpg",
+          "order": 19,
+          "alt": "Dunas Douradas, projeto residencial, foto 19"
+        }
+      ]
+    },
+    {
+      "slug": "agencia-bussola",
+      "title": "Agência Bússola",
+      "tipo": "corporativo",
+      "folderMatch": "Rodrigo",
+      "images": [
+        {
+          "source": "FotosB.Viagens-2.jpg",
+          "order": 1,
+          "alt": "Agência Bússola, projeto corporativo, foto 1"
+        },
+        {
+          "source": "FotosB.Viagens-3.jpg",
+          "order": 2,
+          "alt": "Agência Bússola, projeto corporativo, foto 2"
+        },
+        {
+          "source": "FotosB.Viagens-4.jpg",
+          "order": 3,
+          "alt": "Agência Bússola, projeto corporativo, foto 3"
+        },
+        {
+          "source": "FotosB.Viagens-5.jpg",
+          "order": 4,
+          "alt": "Agência Bússola, projeto corporativo, foto 4"
+        },
+        {
+          "source": "FotosB.Viagens-6.jpg",
+          "order": 5,
+          "alt": "Agência Bússola, projeto corporativo, foto 5"
+        },
+        {
+          "source": "FotosB.Viagens-7.jpg",
+          "order": 6,
+          "alt": "Agência Bússola, projeto corporativo, foto 6"
+        },
+        {
+          "source": "FotosB.Viagens-8.jpg",
+          "order": 7,
+          "alt": "Agência Bússola, projeto corporativo, foto 7"
+        },
+        {
+          "source": "FotosB.Viagens-9.jpg",
+          "order": 8,
+          "alt": "Agência Bússola, projeto corporativo, foto 8"
+        },
+        {
+          "source": "FotosB.Viagens-10.jpg",
+          "order": 9,
+          "alt": "Agência Bússola, projeto corporativo, foto 9"
+        },
+        {
+          "source": "FotosB.Viagens-11.jpg",
+          "order": 10,
+          "alt": "Agência Bússola, projeto corporativo, foto 10"
+        },
+        {
+          "source": "FotosB.Viagens-12.jpg",
+          "order": 11,
+          "alt": "Agência Bússola, projeto corporativo, foto 11"
+        },
+        {
+          "source": "FotosB.Viagens-13.jpg",
+          "order": 12,
+          "alt": "Agência Bússola, projeto corporativo, foto 12"
+        },
+        {
+          "source": "FotosB.Viagens-14.jpg",
+          "order": 13,
+          "alt": "Agência Bússola, projeto corporativo, foto 13"
+        },
+        {
+          "source": "FotosB.Viagens-15.jpg",
+          "order": 14,
+          "alt": "Agência Bússola, projeto corporativo, foto 14"
+        },
+        {
+          "source": "FotosB.Viagens-16.jpg",
+          "order": 15,
+          "alt": "Agência Bússola, projeto corporativo, foto 15"
+        },
+        {
+          "source": "FotosExtrasB.Viagens-1.jpg",
+          "order": 16,
+          "alt": "Agência Bússola, projeto corporativo, foto 16"
+        },
+        {
+          "source": "FotosExtrasB.Viagens-2.jpg",
+          "order": 17,
+          "alt": "Agência Bússola, projeto corporativo, foto 17"
+        },
+        {
+          "source": "FotosExtrasB.Viagens-3.jpg",
+          "order": 18,
+          "alt": "Agência Bússola, projeto corporativo, foto 18"
+        },
+        {
+          "source": "FotosExtrasB.Viagens-4.jpg",
+          "order": 19,
+          "alt": "Agência Bússola, projeto corporativo, foto 19"
+        },
+        {
+          "source": "FotosExtrasB.Viagens-5.jpg",
+          "order": 20,
+          "alt": "Agência Bússola, projeto corporativo, foto 20"
+        }
+      ]
+    }
+  ]
+}
