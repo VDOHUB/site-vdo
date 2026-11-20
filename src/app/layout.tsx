@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Bricolage_Grotesque, Instrument_Sans } from "next/font/google";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
@@ -16,7 +17,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="pt-BR" data-scroll-behavior="smooth" className={`${bricolage.variable} ${instrument.variable}`}>
       <body>
-        <Header />
+        {/* usePathname() em rota dinâmica ([slug]) exige Suspense com cacheComponents. */}
+        <Suspense fallback={<div className="site-header" style={{ height: 73 }} aria-hidden="true" />}>
+          <Header />
+        </Suspense>
         {children}
         <Footer />
       </body>

@@ -1,7 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import TiltedCard from "@/components/reactbits/TiltedCard";
-import { photoUrl } from "@/lib/obras";
+import { VendidoRibbon } from "@/components/obras/VendidoRibbon";
+import { photoUrl } from "@/lib/photo";
+import { clampProgress } from "@/lib/obra-view";
 import type { Foto, Obra } from "@/lib/types";
 
 export const STATUS_LABEL: Record<Obra["status"], string> = {
@@ -24,9 +26,9 @@ function details(obra: Obra): string | null {
  * Card 4:5 de obra com inclinação 3D (React Bits TiltedCard). Leva para `/catalogo/<slug>`.
  * `fotos` é opcional: `listObras` não traz fotos; sem foto o card usa uma superfície neutra.
  */
-export function ObraCard({ obra }: { obra: Obra & { fotos?: Foto[] } }) {
+export function ObraCard({ obra, hideMeta = false }: { obra: Obra & { fotos?: Foto[] }; hideMeta?: boolean }) {
   const cover = obra.fotos?.[0];
-  const progresso = obra.progresso != null ? Math.max(0, Math.min(100, Math.round(obra.progresso))) : null;
+  const progresso = clampProgress(obra.progresso);
   const ficha = obra.status === "a_venda" || obra.status === "vendido" ? details(obra) : null;
   const sold = obra.status === "vendido";
 
@@ -70,11 +72,7 @@ export function ObraCard({ obra }: { obra: Obra & { fotos?: Foto[] } }) {
         <div className="obra-card-tags">
           <span className={`pill pill-${obra.status}`}>{STATUS_LABEL[obra.status]}</span>
         </div>
-        {sold && (
-          <div className="obra-card-ribbon" aria-hidden="true">
-            Vendido
-          </div>
-        )}
+        {sold && <VendidoRibbon />}
         <div className="obra-card-cap">
           <h3>{obra.titulo}</h3>
           <small>{obra.local}</small>
@@ -93,7 +91,7 @@ export function ObraCard({ obra }: { obra: Obra & { fotos?: Foto[] } }) {
               <small>{progresso}% concluído</small>
             </div>
           )}
-          {(obra.status === "a_venda" || sold) && (ficha || obra.preco) && (
+          {!hideMeta && (obra.status === "a_venda" || sold) && (ficha || obra.preco) && (
             <small className="obra-card-meta">
               {[ficha, obra.preco].filter(Boolean).join(" · ")}
             </small>
