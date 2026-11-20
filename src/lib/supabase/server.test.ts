@@ -5,6 +5,7 @@ const cookieStore = {
   set: vi.fn(),
 };
 vi.mock("next/headers", () => ({ cookies: vi.fn(async () => cookieStore) }));
+vi.mock("next/server", () => ({ connection: vi.fn(async () => undefined) }));
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let fakeClient: any;

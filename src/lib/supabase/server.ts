@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import { connection } from "next/server";
 import { createServerClient as createSsrServerClient } from "@supabase/ssr";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { supabasePublicEnv } from "./env";
@@ -10,6 +11,9 @@ import { supabasePublicEnv } from "./env";
  */
 export async function createServerClient(): Promise<SupabaseClient> {
   const { url, anonKey } = supabasePublicEnv();
+  // Leitura de requisicao: com sessao no cookie o supabase-js consulta o relogio
+  // (expiracao do token), o que o Cache Components nao aceita fora dela.
+  await connection();
   const cookieStore = await cookies();
   return createSsrServerClient(url, anonKey, {
     cookies: {
