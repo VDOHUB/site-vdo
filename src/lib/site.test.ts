@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { SITE, NAV } from "./site";
 
 describe("SITE", () => {
@@ -21,5 +21,22 @@ describe("NAV", () => {
       "Sobre",
       "Contato",
     ]);
+  });
+});
+
+describe("SITE.social.facebook", () => {
+  it("é null sem NEXT_PUBLIC_FACEBOOK_URL", async () => {
+    vi.stubEnv("NEXT_PUBLIC_FACEBOOK_URL", "");
+    vi.resetModules();
+    const m = await import("./site");
+    expect(m.SITE.social.facebook).toBeNull();
+    vi.unstubAllEnvs();
+  });
+  it("usa NEXT_PUBLIC_FACEBOOK_URL quando definida", async () => {
+    vi.stubEnv("NEXT_PUBLIC_FACEBOOK_URL", "https://facebook.com/vdo");
+    vi.resetModules();
+    const m = await import("./site");
+    expect(m.SITE.social.facebook).toBe("https://facebook.com/vdo");
+    vi.unstubAllEnvs();
   });
 });

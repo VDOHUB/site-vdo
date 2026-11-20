@@ -8,3 +8,12 @@ test("menu mobile navega para o Catálogo de Obras", async ({ page }) => {
   await expect(page).toHaveURL(/\/catalogo$/);
   await expect(page.getByRole("heading", { name: "Catálogo de Obras", level: 1 })).toBeVisible();
 });
+
+test("prefers-reduced-motion desliga rolagem suave e transições", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  expect(await page.evaluate(() => getComputedStyle(document.documentElement).scrollBehavior)).toBe("auto");
+  expect(
+    await page.evaluate(() => getComputedStyle(document.querySelector("a.link")!).transitionDuration),
+  ).toBe("0s");
+});

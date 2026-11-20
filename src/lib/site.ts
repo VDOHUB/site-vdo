@@ -13,7 +13,7 @@ export const SITE = {
   social: {
     instagram: "https://www.instagram.com/viverdobra/",
     youtube: "https://www.youtube.com/channel/UCqF-imgywwuURWTK-EQm7DQ",
-    facebook: null as string | null,
+    facebook: (process.env.NEXT_PUBLIC_FACEBOOK_URL || null) as string | null,
   },
 };
 
