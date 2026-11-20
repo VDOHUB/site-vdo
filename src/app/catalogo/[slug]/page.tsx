@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Suspense } from "react";
+import { cache, Suspense } from "react";
 import { Gallery } from "@/components/obras/Gallery";
 import { STATUS_LABEL } from "@/components/obras/ObraCard";
-import { getObra } from "@/lib/obras";
+import { getObra as fetchObra } from "@/lib/obras";
+
+// Uma consulta por requisição, compartilhada entre generateMetadata e Detalhe.
+const getObra = cache(fetchObra);
 
 type Props = { params: Promise<{ slug: string }> };
 

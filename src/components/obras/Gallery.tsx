@@ -10,6 +10,7 @@ export function Gallery({ fotos }: { fotos: Foto[] }) {
   const [index, setIndex] = useState<number | null>(null);
   const trigger = useRef<HTMLElement | null>(null);
   const closeBtn = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
   const total = fotos.length;
   const isOpen = index !== null;
 
@@ -30,7 +31,7 @@ export function Gallery({ fotos }: { fotos: Foto[] }) {
       else if (e.key === "ArrowLeft") step(-1);
       else if (e.key === "Tab") {
         // foco preso dentro do diálogo
-        const nodes = Array.from(document.querySelectorAll<HTMLElement>(".lightbox button"));
+        const nodes = Array.from(dialogRef.current?.querySelectorAll<HTMLElement>("button:not([tabindex='-1'])") ?? []);
         if (!nodes.length) return;
         const first = nodes[0];
         const last = nodes[nodes.length - 1];
@@ -85,7 +86,7 @@ export function Gallery({ fotos }: { fotos: Foto[] }) {
       </ul>
 
       {current && (
-        <div className="lightbox" role="dialog" aria-modal="true" aria-label="Galeria de fotos">
+        <div ref={dialogRef} className="lightbox" role="dialog" aria-modal="true" aria-label="Galeria de fotos">
           <button type="button" className="lightbox-backdrop" tabIndex={-1} aria-hidden="true" onClick={close} />
           <figure className="lightbox-fig">
             <Image src={photoUrl(current.path, 1600)} alt={current.alt} fill unoptimized sizes="100vw" />

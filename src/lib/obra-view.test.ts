@@ -20,6 +20,8 @@ describe("imóvel", () => {
     const href = imovelContactHref({ status: "a_venda", titulo: "Casa Jardim" });
     expect(href).toBe(SITE.whatsappUrl("Olá, tenho interesse no imóvel Casa Jardim"));
     expect(href).toContain(encodeURIComponent("Olá, tenho interesse no imóvel Casa Jardim"));
-    expect(imovelContactHref({ status: "vendido", titulo: "Casa" })).toBeNull();
+    for (const status of ["vendido", "em_andamento", "pronta"] as const) {
+      expect(imovelContactHref({ status, titulo: "Casa" })).toBeNull();
+    }
   });
 });

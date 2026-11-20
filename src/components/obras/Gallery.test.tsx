@@ -56,4 +56,19 @@ describe("Gallery", () => {
     expect(document.activeElement).toBe(thumb);
     expect(document.body.style.overflow).toBe("");
   });
+
+  it("prende o Tab no diálogo sem nunca focar o backdrop", () => {
+    render(<Gallery fotos={fotos} />);
+    open(1);
+    const dialog = screen.getByRole("dialog");
+    const btns = Array.from(dialog.querySelectorAll<HTMLElement>("button:not([tabindex='-1'])"));
+    const first = btns[0];
+    const last = btns[btns.length - 1];
+    last.focus();
+    fireEvent.keyDown(document, { key: "Tab" });
+    expect(document.activeElement).toBe(first);
+    fireEvent.keyDown(document, { key: "Tab", shiftKey: true });
+    expect(document.activeElement).toBe(last);
+    expect(document.activeElement?.classList.contains("lightbox-backdrop")).toBe(false);
+  });
 });

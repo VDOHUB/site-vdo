@@ -35,6 +35,5 @@ test("/catalogo/nao-existe mostra a página 404", async ({ page }) => {
   // Com cacheComponents a rota dinâmica faz streaming sob Suspense: o status HTTP já saiu como 200,
   // mas notFound() renderiza a página 404; a metadata marca robots noindex.
   await page.goto("/catalogo/nao-existe");
-  await expect(page.getByText(/This page could not be found|404/i).first()).toBeVisible();
-  await expect(page.getByRole("heading", { level: 1, name: "Carregando obra…" })).toHaveCount(0);
+  await expect(page.getByRole("heading", { level: 1, name: "404" })).toBeVisible();
 });
