@@ -50,6 +50,9 @@ export function ObraCard({ obra }: { obra: Obra & { fotos?: Foto[] } }) {
       >
         <div className="obra-card-media">
           {cover ? (
+            // `unoptimized`: photoUrl já entrega variantes pré-dimensionadas (800/1600 webp) das fotos
+            // seed, e os uploads do Adm vêm direto de URLs públicas do Supabase Storage; assim não
+            // passamos pelo otimizador do Next nem precisamos de `images.remotePatterns`.
             <Image
               src={photoUrl(cover.path, 800)}
               alt={cover.alt || obra.titulo}

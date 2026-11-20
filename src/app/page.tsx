@@ -9,7 +9,12 @@ import { ValuesMarquee } from "@/components/home/ValuesMarquee";
 import { ObraGridSkeleton } from "@/components/obras/ObraGridSkeleton";
 import { SITE } from "@/lib/site";
 
-const VALORES = ["Honestidade", "Transparência", "Compromisso"];
+// Frescor dos dados: com `cacheComponents` o Next 16 proíbe `export const revalidate`
+// (erro de build). As listas de obras usam cookies (createServerClient) e ficam dentro de
+// <Suspense>, então rodam a cada requisição sobre a casca estática: edições do Adm aparecem
+// na hora. Se um dia forem cacheadas com "use cache", usar cacheLife + revalidateTag no Adm.
+
+const VALORES =["Honestidade", "Transparência", "Compromisso"];
 
 export default function Home() {
   return (

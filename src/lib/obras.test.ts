@@ -52,6 +52,54 @@ describe("listObras", () => {
     expect(calls).toContainEqual(["order", "ordem", { ascending: true }]);
   });
 
+  it("sem withFotos usa select('*')", async () => {
+    await listObras({});
+    expect(calls).toContainEqual(["select", "*"]);
+  });
+
+  it("withFotos: uma consulta com obra_fotos embutido, fotos ordenadas e sem a chave obra_fotos", async () => {
+    result = {
+      data: [
+        { slug: "a", publicado: true, obra_fotos: [{ ordem: 3, path: "c" }, { ordem: 1, path: "a" }, { ordem: 2, path: "b" }] },
+        { slug: "b", publicado: true, obra_fotos: [] },
+      ],
+      error: null,
+    };
+    const r = await listObras({ status: ["pronta"], withFotos: true });
+    expect(calls.filter((c) => c[0] === "from")).toHaveLength(1);
+    expect(calls).toContainEqual(["select", "*, obra_fotos(*)"]);
+    expect(calls).toContainEqual(["eq", "publicado", true]);
+    expect(calls).toContainEqual(["in", "status", ["pronta"]]);
+    expect(calls).toContainEqual(["order", "ordem", { ascending: true }]);
+    expect(r.map((o) => o.slug)).toEqual(["a", "b"]);
+    expect(r[0].fotos.map((f) => f.path)).toEqual(["a", "b", "c"]);
+    expect(r[0]).not.toHaveProperty("obra_fotos");
+  });
+
+  it("withFotos: fotos [] quando nao ha fotos e descarta nao publicadas", async () => {
+    result = {
+      data: [
+        { slug: "a", publicado: true, obra_fotos: null },
+        { slug: "x", publicado: false, obra_fotos: [] },
+      ],
+      error: null,
+    };
+    const r = await listObras({ withFotos: true });
+    expect(r).toEqual([{ slug: "a", publicado: true, fotos: [] }]);
+  });
+
+  it("withFotos: [] sem env e [] com erro registrado", async () => {
+    const spy = vi.spyOn(console, "error").mockImplementation(() => {});
+    delete process.env.NEXT_PUBLIC_SUPABASE_URL;
+    expect(await listObras({ withFotos: true })).toEqual([]);
+    expect(spy).not.toHaveBeenCalled();
+    process.env.NEXT_PUBLIC_SUPABASE_URL = "https://abc.supabase.co";
+    result = { data: null, error: { message: "y" } };
+    expect(await listObras({ withFotos: true })).toEqual([]);
+    expect(spy).toHaveBeenCalledWith("[obras] listObras failed", { message: "y" });
+    spy.mockRestore();
+  });
+
   it("retorna [] sem NEXT_PUBLIC_SUPABASE_URL", async () => {
     delete process.env.NEXT_PUBLIC_SUPABASE_URL;
     expect(await listObras({})).toEqual([]);

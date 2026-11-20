@@ -1,13 +1,12 @@
 import Link from "next/link";
 import { ObraCard } from "@/components/obras/ObraCard";
 import { listObras } from "@/lib/obras";
-import { withCovers } from "./withCovers";
 
 const MAX = 3;
 
 /** Destaques do Catálogo de Obras: obras prontas marcadas como destaque no Adm. */
 export async function FeaturedObras() {
-  const obras = await withCovers((await listObras({ destaque: true, status: ["pronta"] })).slice(0, MAX));
+  const obras = (await listObras({ destaque: true, status: ["pronta"], withFotos: true })).slice(0, MAX);
 
   if (obras.length === 0) {
     return (

@@ -1,18 +1,16 @@
 import { ObraCard } from "@/components/obras/ObraCard";
 import { listObras } from "@/lib/obras";
 import { SITE } from "@/lib/site";
-import { withCovers } from "./withCovers";
 
 const MAX = 3;
 
 /** Faixa "Acontecendo agora": obras em andamento primeiro, depois imóveis à venda. */
 export async function LiveObras() {
-  const all = await listObras({ status: ["em_andamento", "a_venda"] });
-  const ordered = [
+  const all = await listObras({ status: ["em_andamento", "a_venda"], withFotos: true });
+  const obras = [
     ...all.filter((o) => o.status === "em_andamento"),
     ...all.filter((o) => o.status === "a_venda"),
   ].slice(0, MAX);
-  const obras = await withCovers(ordered);
 
   if (obras.length === 0) {
     return (
