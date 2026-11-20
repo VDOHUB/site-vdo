@@ -1,6 +1,9 @@
 // Pipeline de mídia: extrai do zip (não confiável) apenas o necessário para uma pasta
 // FORA do projeto e gera saídas otimizadas (imagens AVIF/WebP e vídeo do hero).
 // Uso: node scripts/optimize-media.mjs [--zip <caminho>] [--work <dir>] [--only images|video]
+// Variáveis de ambiente (vídeo): CRF1080 (padrão 28), CRF720 (30), CRFWEBM (38) ajustam a qualidade;
+// HERO_ONLY=<hero-1080.mp4|hero-720.mp4|hero-1080.webm> reencoda só esse arquivo.
+// Teste: HERO_SOURCE=<mp4 original> sobrescreve o caminho do vídeo fonte.
 import { spawn } from 'node:child_process';
 import { createWriteStream, existsSync } from 'node:fs';
 import { mkdir, readFile, stat } from 'node:fs/promises';

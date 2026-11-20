@@ -1,6 +1,7 @@
 {
   "hero": {
-    "source": "VIVERDEOBRA(V.3).mp4"
+    "source": "VIVERDEOBRA(V.3).mp4",
+    "sourceDurationSec": 143.977167
   },
   "obras": [
     {
