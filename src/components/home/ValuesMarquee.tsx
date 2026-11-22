@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import ScrollVelocity from "@/components/reactbits/ScrollVelocity";
 
 const WORDS = [
@@ -14,6 +14,27 @@ const WORDS = [
 
 /** Faixa de valores que corre devagar e acelera com a rolagem (React Bits ScrollVelocity). */
 export function ValuesMarquee() {
+  const ref = useRef<HTMLDivElement>(null);
+  const [live, setLive] = useState(false);
+
+  // A faixa fica abaixo da dobra: só liga a animação (laço de quadros + ResizeObserver) quando
+  // está perto de aparecer. Antes disso mostra a linha estática, com a mesma altura.
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          setLive(true);
+          io.disconnect();
+        }
+      },
+      { rootMargin: "300px 0px" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
   const line = (
     <span className="marquee-line">
       {WORDS.map((w, i) => (
@@ -26,7 +47,12 @@ export function ValuesMarquee() {
   );
 
   return (
-    <div className="marquee" aria-hidden="true">
+    <div className="marquee" aria-hidden="true" ref={ref}>
+      {!live ? (
+        <div className="marquee-scroller marquee-static" style={{ fontFamily: "var(--font-display)" }}>
+          {line}
+        </div>
+      ) : (
       <ScrollVelocity
         texts={[line]}
         velocity={38}
@@ -39,6 +65,7 @@ export function ValuesMarquee() {
         scrollerClassName="marquee-scroller"
         parallaxClassName="marquee-parallax"
       />
+      )}
     </div>
   );
 }

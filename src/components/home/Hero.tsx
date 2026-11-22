@@ -1,15 +1,50 @@
 "use client";
 
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import BlurText from "@/components/reactbits/BlurText";
 import { hero } from "@/lib/media";
 import { useVideoAllowed } from "./useVideoAllowed";
 
 const TITLE = "Obra sem dor de cabeça.";
 
+/** Espera depois do evento load antes de começar o vídeo de fundo (poster primeiro). */
+export const VIDEO_START_DELAY_MS = 1500;
+
+/**
+ * true só depois do `load` da página + um momento ocioso + um pequeno atraso. O vídeo tem
+ * vários MB: começar a baixar/decodificar antes disso disputa rede e CPU com o LCP e o
+ * carregamento dos scripts (TBT), e o poster já cobre esse intervalo.
+ */
+function useAfterLoadIdle(delay: number): boolean {
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    let timer: number | undefined;
+    let cancelled = false;
+    const go = () => {
+      timer = window.setTimeout(() => {
+        if (!cancelled) setReady(true);
+      }, delay);
+    };
+    const start = () => {
+      if (typeof window.requestIdleCallback === "function") window.requestIdleCallback(go, { timeout: 3000 });
+      else go();
+    };
+    if (document.readyState === "complete") start();
+    else window.addEventListener("load", start, { once: true });
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timer);
+      window.removeEventListener("load", start);
+    };
+  }, [delay]);
+  return ready;
+}
+
 export function Hero() {
-  const videoAllowed = useVideoAllowed();
+  const allowed = useVideoAllowed();
+  const afterLoad = useAfterLoadIdle(VIDEO_START_DELAY_MS);
+  const videoAllowed = allowed && afterLoad;
   const videoRef = useRef<HTMLVideoElement>(null);
   const [paused, setPaused] = useState(false);
 
@@ -30,7 +65,17 @@ export function Hero() {
       <div className="hero-media" aria-hidden="true">
         {/* Poster sempre presente: é o LCP e o fallback sem vídeo (reduced motion / economia de dados). */}
         {/* eslint-disable-next-line @next/next/no-img-element -- poster já otimizado (webp 24 KB), precisa casar 1:1 com o vídeo */}
-        <img className="hero-poster" src={hero.poster} alt="" fetchPriority="high" decoding="async" />
+        <img
+          className="hero-poster"
+          src={hero.poster}
+          srcSet={`${hero.posterSmall} 800w, ${hero.poster} 1600w`}
+          sizes="100vw"
+          width={1600}
+          height={900}
+          alt=""
+          fetchPriority="high"
+          decoding="async"
+        />
         {videoAllowed && (
           <video
             ref={videoRef}
@@ -39,7 +84,7 @@ export function Hero() {
             muted
             loop
             playsInline
-            preload="metadata"
+            preload="none"
             poster={hero.poster}
             disablePictureInPicture
             tabIndex={-1}

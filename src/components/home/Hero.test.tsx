@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { cleanup, render, screen } from "@testing-library/react";
-import { Hero } from "./Hero";
+import { cleanup, render, screen, waitFor } from "@testing-library/react";
+import { Hero, VIDEO_START_DELAY_MS } from "./Hero";
 
 function mockMatchMedia(reduce: boolean) {
   Object.defineProperty(window, "matchMedia", {
@@ -42,16 +42,18 @@ afterEach(() => {
 });
 
 describe("Hero", () => {
-  it("renderiza o vídeo mudo, em loop, inline, com poster e fontes MP4 e WebM", () => {
+  it("renderiza o vídeo mudo, em loop, inline, com poster e fontes MP4 e WebM", async () => {
     mockMatchMedia(false);
     const { container } = render(<Hero />);
-    const video = container.querySelector("video");
-    expect(video).not.toBeNull();
+    // O vídeo só entra depois do load + ocioso + atraso: no início há só o poster.
+    expect(container.querySelector("video")).toBeNull();
+    await waitFor(() => expect(container.querySelector("video")).not.toBeNull(), { timeout: 6000 });
+    const video = container.querySelector("video")!;
     expect(video!.muted).toBe(true);
     expect(video!.loop).toBe(true);
     expect(video!.autoplay).toBe(true);
     expect(video!.hasAttribute("playsinline")).toBe(true);
-    expect(video!.getAttribute("preload")).toBe("metadata");
+    expect(video!.getAttribute("preload")).toBe("none");
     expect(video!.getAttribute("poster")).toBe("/hero/hero-poster.webp");
     const types = [...video!.querySelectorAll("source")].map((s) => s.getAttribute("type"));
     expect(types).toContain("video/mp4");
@@ -62,21 +64,23 @@ describe("Hero", () => {
     expect(first.getAttribute("media")).toBe("(max-width: 768px)");
   });
 
-  it("com prefers-reduced-motion: reduce não renderiza vídeo, só o poster", () => {
+  it("com prefers-reduced-motion: reduce não renderiza vídeo, só o poster", async () => {
     mockMatchMedia(true);
     const { container } = render(<Hero />);
+    await new Promise((r) => setTimeout(r, VIDEO_START_DELAY_MS + 300));
     expect(container.querySelector("video")).toBeNull();
     const poster = container.querySelector('img[src*="hero-poster"]');
     expect(poster).not.toBeNull();
   });
 
-  it("com economia de dados (saveData) não renderiza vídeo", () => {
+  it("com economia de dados (saveData) não renderiza vídeo", async () => {
     mockMatchMedia(false);
     Object.defineProperty(navigator, "connection", {
       configurable: true,
       value: { saveData: true, addEventListener: vi.fn(), removeEventListener: vi.fn() },
     });
     const { container } = render(<Hero />);
+    await new Promise((r) => setTimeout(r, VIDEO_START_DELAY_MS + 300));
     expect(container.querySelector("video")).toBeNull();
   });
 

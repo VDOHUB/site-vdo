@@ -9,6 +9,8 @@
   --mute: #a7a398;
   --y: #f0b323;
   --y-ink: #1a1403;
+  /* altura real do header: 72px do conteúdo + 1px da borda. Usada também pelo fallback do Suspense (sem CLS). */
+  --header-h: 73px;
   color-scheme: dark;
 }
 
@@ -43,8 +45,9 @@ p { margin: 0; }
 .page { padding-block: 56px; min-height: 60vh; }
 
 /* header */
-.site-header { position: sticky; top: 0; z-index: 20; background: rgba(23,23,22,.88); backdrop-filter: blur(14px); border-bottom: 1px solid var(--line); }
-.site-header .in { max-width: 1180px; margin: 0 auto; padding-inline: 16px; display: flex; align-items: center; gap: 20px; height: 72px; }
+.site-header { position: sticky; top: 0; z-index: 20; background: rgba(23,23,22,.97); border-bottom: 1px solid var(--line); }
+.site-header-ph { height: var(--header-h); }
+.site-header .in { max-width: 1180px; margin: 0 auto; padding-inline: 16px; display: flex; align-items: center; gap: 20px; height: calc(var(--header-h) - 1px); }
 .logo { border-radius: 6px; flex: none; }
 .main-nav { display: flex; gap: 4px; margin-left: auto; align-items: center; }
 .main-nav a.link { padding: 8px 12px; border-radius: 999px; font-size: 15px; color: var(--mute); transition: .2s; white-space: nowrap; }
@@ -82,7 +85,7 @@ h3 { font-size: 21px; font-weight: 600; letter-spacing: -0.01em; }
 .btn.sm { padding: 9px 16px; font-size: 14px; }
 .btn.pri { background: var(--y); color: var(--y-ink); border-color: var(--y); }
 .btn.pri:hover { background: var(--fg); border-color: var(--fg); color: var(--y-ink); }
-.btn.ghost { border-color: rgba(243,239,230,.38); background: rgba(23,23,22,.25); backdrop-filter: blur(6px); }
+.btn.ghost { border-color: rgba(243,239,230,.38); background: rgba(23,23,22,.45); }
 .btn.ghost:hover { border-color: var(--fg); color: var(--fg); background: rgba(23,23,22,.5); }
 .pill { display: inline-block; font-size: 12px; font-weight: 600; padding: 4px 11px; border-radius: 999px; border: 1px solid var(--line); color: var(--mute); background: rgba(23,23,22,.78); backdrop-filter: blur(6px); }
 .pill-pronta { color: #7fd8a4; border-color: #2f5a42; }
@@ -106,7 +109,7 @@ h3 { font-size: 21px; font-weight: 600; letter-spacing: -0.01em; }
 .hero-media, .hero-veil { position: absolute; inset: 0; }
 .hero-media { z-index: -2; }
 .hero-poster, .hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.hero-video { filter: saturate(.9) contrast(1.04); }
+/* Sem CSS filter no vídeo: filtro em vídeo de tela cheia é recomposto a cada quadro (caro em celular). */
 .hero-veil { z-index: -1; background:
   linear-gradient(90deg, rgba(14,14,13,.9) 0%, rgba(14,14,13,.62) 38%, rgba(14,14,13,.22) 72%, rgba(14,14,13,.12) 100%),
   linear-gradient(180deg, rgba(23,23,22,.55) 0%, rgba(23,23,22,0) 26%, rgba(23,23,22,0) 55%, var(--bg) 100%); }
@@ -118,7 +121,7 @@ h3 { font-size: 21px; font-weight: 600; letter-spacing: -0.01em; }
 .hero-cta { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 32px; }
 .hero-in { animation: hero-in .9s cubic-bezier(.2,.7,.2,1) both; }
 @keyframes hero-in { from { opacity: 0; transform: translateY(14px); } }
-.hero-toggle { position: absolute; right: max(16px, calc((100% - 1180px) / 2 + 16px)); bottom: clamp(24px, 3vw, 36px); display: inline-flex; align-items: center; gap: 8px; padding: 7px 12px 7px 10px; border-radius: 999px; border: 1px solid rgba(243,239,230,.22); background: rgba(14,14,13,.45); backdrop-filter: blur(8px); color: #d9d4c8; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; font-weight: 600; transition: border-color .2s, color .2s; }
+.hero-toggle { position: absolute; right: max(16px, calc((100% - 1180px) / 2 + 16px)); bottom: clamp(24px, 3vw, 36px); display: inline-flex; align-items: center; gap: 8px; padding: 7px 12px 7px 10px; border-radius: 999px; border: 1px solid rgba(243,239,230,.22); background: rgba(14,14,13,.7); color: #d9d4c8; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; font-weight: 600; transition: border-color .2s, color .2s; }
 .hero-toggle:hover { border-color: var(--y); color: var(--fg); }
 .hero-toggle-icon { width: 10px; height: 10px; border-inline: 3px solid currentColor; box-sizing: border-box; }
 .hero-toggle-icon.is-paused { border: 0; border-left: 9px solid currentColor; border-block: 5px solid transparent; width: 0; height: 0; }
@@ -136,6 +139,7 @@ h3 { font-size: 21px; font-weight: 600; letter-spacing: -0.01em; }
 /* ---------- marquee ---------- */
 .marquee { border-block: 1px solid var(--line); background: var(--bg2); padding-block: clamp(16px, 2vw, 24px); overflow: hidden; }
 .marquee .marquee-scroller { font-size: clamp(24px, 3.4vw, 42px); line-height: 1.1; font-weight: 600; letter-spacing: -0.02em; color: var(--fg); }
+.marquee .marquee-static { white-space: nowrap; overflow: hidden; }
 .marquee-line { display: inline-flex; align-items: center; gap: clamp(20px, 2.6vw, 36px); padding-right: clamp(20px, 2.6vw, 36px); }
 .marquee-line .is-accent { color: var(--y); }
 .marquee-dot { font-size: .42em; color: var(--mute); }
