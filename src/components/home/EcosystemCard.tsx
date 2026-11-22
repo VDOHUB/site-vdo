@@ -4,7 +4,8 @@ import SpotlightCard from "@/components/reactbits/SpotlightCard";
 type Props = {
   title: string;
   text: string;
-  href: string;
+  /** Sem href o card aparece sem link (ex.: produto ainda sem endereço). */
+  href: string | null;
   /** Marca do produto: wordmark tipográfico ou logo. */
   mark: ReactNode;
   /** Linha de rodapé à esquerda (domínio, nome da área). */
@@ -21,13 +22,8 @@ const SURFACE = {
 
 /** Card do ecossistema VDO com luz que segue o cursor (React Bits SpotlightCard). */
 export function EcosystemCard({ title, text, href, mark, meta, action = "Abrir" }: Props) {
-  const external = /^https?:\/\//.test(href);
-  return (
-    <a
-      href={href}
-      className="eco-card"
-      {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-    >
+  const external = href ? /^https?:\/\//.test(href) : false;
+  const body = (
       <SpotlightCard
         className="eco-card-body"
         style={SURFACE}
@@ -42,11 +38,19 @@ export function EcosystemCard({ title, text, href, mark, meta, action = "Abrir" 
         <p>{text}</p>
         <div className="eco-card-go">
           <span>{meta ?? title}</span>
-          <span className="eco-card-action">
-            {action} <span aria-hidden="true">{external ? "↗" : "→"}</span>
-          </span>
+          {href && (
+            <span className="eco-card-action">
+              {action} <span aria-hidden="true">{external ? "↗" : "→"}</span>
+            </span>
+          )}
         </div>
       </SpotlightCard>
+  );
+  return href ? (
+    <a href={href} className="eco-card" {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}>
+      {body}
     </a>
+  ) : (
+    <div className="eco-card">{body}</div>
   );
 }

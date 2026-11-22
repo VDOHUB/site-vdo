@@ -6,6 +6,7 @@ export function Footer() {
   const social = [
     { label: "Instagram", href: SITE.social.instagram },
     { label: "YouTube", href: SITE.social.youtube },
+    { label: "Google Meu Negócio", href: SITE.social.google },
     { label: "Facebook", href: SITE.social.facebook },
   ].filter((s): s is { label: string; href: string } => Boolean(s.href));
 
@@ -25,7 +26,7 @@ export function Footer() {
         </div>
         <div>
           <h4>Ecossistema</h4>
-          {ACCESS.map((a) => (
+          {ACCESS.filter((a): a is typeof a & { href: string } => Boolean(a.href)).map((a) => (
             <a key={a.label} href={a.href}>{a.label}</a>
           ))}
         </div>

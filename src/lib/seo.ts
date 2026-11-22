@@ -10,7 +10,7 @@ export function siteUrl(): string {
 
 /** Dados estruturados (schema.org) da empresa, para a Home. Campos nulos ficam de fora. */
 export function localBusinessJsonLd(): Record<string, unknown> {
-  const sameAs = [SITE.social.instagram, SITE.social.youtube, SITE.social.facebook].filter(
+  const sameAs = [SITE.social.instagram, SITE.social.youtube, SITE.social.google, SITE.social.facebook].filter(
     (u): u is string => Boolean(u),
   );
   const a = SITE.addressParts;

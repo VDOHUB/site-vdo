@@ -40,3 +40,20 @@ describe("SITE.social.facebook", () => {
     vi.unstubAllEnvs();
   });
 });
+
+describe("ACCESS / VDO Club", () => {
+  it("href do Club é null com variável vazia e usa a URL quando definida", async () => {
+    vi.stubEnv("NEXT_PUBLIC_VDOCLUB_URL", "");
+    vi.resetModules();
+    let m = await import("./site");
+    expect(m.ACCESS.find((a) => a.label === "VDO Club")!.href).toBeNull();
+    vi.stubEnv("NEXT_PUBLIC_VDOCLUB_URL", "https://club.example");
+    vi.resetModules();
+    m = await import("./site");
+    expect(m.ACCESS.find((a) => a.label === "VDO Club")!.href).toBe("https://club.example");
+    vi.unstubAllEnvs();
+  });
+  it("tem o Google Meu Negócio nas redes", () => {
+    expect(SITE.social.google).toBe("https://g.page/viver-de-obra-engenharia");
+  });
+});

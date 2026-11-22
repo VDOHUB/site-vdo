@@ -30,10 +30,10 @@ acesso às contas abaixo. Reserve cerca de 1 hora.
    - **service_role key** (vira `SUPABASE_SERVICE_ROLE_KEY`). Esta é secreta: dá acesso total ao banco.
 6. Guarde também o **Reference ID** do projeto (em Project Settings > General).
 
-## 2. Criar as tabelas (migrações 0001 a 0003)
+## 2. Criar as tabelas (migrações 0001 a 0004)
 
 As migrações ficam em `supabase/migrations/` (`0001_init.sql`, `0002_storage.sql`,
-`0003_destaque_ordem.sql`). Elas criam as tabelas, as regras de segurança (RLS) e o bucket de fotos.
+`0003_destaque_ordem.sql`, `0004_leads_server_only.sql`). Elas criam as tabelas, as regras de segurança (RLS) e o bucket de fotos.
 
 No computador do desenvolvedor, dentro da pasta do projeto:
 
@@ -44,7 +44,7 @@ npx supabase@latest db push
 ```
 
 - `link` pede a senha do banco (passo 1.3).
-- `db push` lista as 3 migrações e pede confirmação. Responda `Y`.
+- `db push` lista as 4 migrações e pede confirmação. Responda `Y`.
 
 **O que NÃO rodar em produção:**
 
@@ -79,6 +79,11 @@ values ('COLE-O-UID-AQUI', 'admin');
 ```
 
 Para criar outro administrador no futuro, repita os passos 1 a 3.
+
+4. **Desative o cadastro público:** em **Authentication > Sign In / Providers > Email**, desligue
+   **Allow new users to sign up**. Assim ninguém cria conta sozinho; só você cria usuários pelo painel.
+5. Em **Authentication > URL Configuration**, defina **Site URL** como o domínio de produção
+   (`https://viverdeobra.com`).
 
 ## 4. Conferir o bucket de fotos
 
@@ -163,7 +168,7 @@ Faça com o site novo já no ar (no endereço provisório e, depois, no domínio
   é 200 (com `noindex`, então não entra no Google). É uma característica do modelo de renderização atual.
 - **Novas tabelas no Supabase:** o projeto não revoga os privilégios padrão do Supabase. Quem criar uma
   tabela nova precisa **ativar RLS e criar as policies** (e revogar `anon`/`authenticated`). Veja
-  `0001_init.sql` como modelo.
+  `0001_init.sql` como modelo. (A migração 0004 já tira esses privilégios padrão para tabelas novas.)
 - **Peso do repositório e dos vídeos:** os vídeos do topo (de 7 a 17 MB cada) e as fotos somam cerca de
   52 MB no Git. Funciona, mas deixa clonar e publicar mais lento. Sugestão: usar Git LFS ou hospedar
   os vídeos num CDN/Storage.

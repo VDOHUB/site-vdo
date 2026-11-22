@@ -3,13 +3,37 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ACCESS, NAV } from "@/lib/site";
 
 export function Header() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [acc, setAcc] = useState(false);
+
+  const accRef = useRef<HTMLDivElement>(null);
+  const accBtnRef = useRef<HTMLButtonElement>(null);
+  const links = ACCESS.filter((a): a is typeof a & { href: string } => Boolean(a.href));
+
+  // Menu "Acessar": fecha com Escape (devolvendo o foco ao botão) e com clique fora.
+  useEffect(() => {
+    if (!acc) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setAcc(false);
+        accBtnRef.current?.focus();
+      }
+    };
+    const onDown = (e: PointerEvent) => {
+      if (accRef.current && !accRef.current.contains(e.target as Node)) setAcc(false);
+    };
+    document.addEventListener("keydown", onKey);
+    document.addEventListener("pointerdown", onDown);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.removeEventListener("pointerdown", onDown);
+    };
+  }, [acc]);
 
   const close = () => {
     setOpen(false);
@@ -38,13 +62,13 @@ export function Header() {
               {n.label}
             </Link>
           ))}
-          <div className="acc">
-            <button type="button" aria-haspopup="true" aria-expanded={acc} onClick={() => setAcc((v) => !v)}>
+          <div className="acc" ref={accRef}>
+            <button type="button" ref={accBtnRef} aria-haspopup="true" aria-expanded={acc} aria-controls="acc-menu" onClick={() => setAcc((v) => !v)}>
               Acessar ▾
             </button>
             {acc && (
-              <div className="acc-menu">
-                {ACCESS.map((a) => (
+              <div className="acc-menu" id="acc-menu">
+                {links.map((a) => (
                   <a key={a.label} href={a.href} onClick={close}>
                     <b>{a.label}</b>
                     <small>{a.desc}</small>

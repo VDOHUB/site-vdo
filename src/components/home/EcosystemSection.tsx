@@ -25,19 +25,24 @@ export function EcosystemSection() {
           <EcosystemCard
             title="Sala comercial por assinatura"
             text="Escritório pronto, com café, fechadura digital e área do cliente. Você assina e usa."
-            href={hub?.href ?? "#"}
+            href={hub?.href ?? null}
             meta="vdohub.viverdeobra.com"
             mark={
-              <span className="wordmark">
-                VDO <b>HUB</b>
-              </span>
+              <Image
+                src="/brand/logo-vdo-hub.png"
+                alt="VDO Hub"
+                width={500}
+                height={500}
+                className="eco-logo"
+                sizes="112px"
+              />
             }
           />
           <EcosystemCard
             title="Clube de arquitetos e fornecedores"
             text="Rede selecionada, com cadastro aprovado, avaliações e orçamentos entre quem projeta e quem fornece."
-            href={club?.href ?? "#"}
-            meta="Entrar no Club"
+            href={club?.href ?? null}
+            meta={club?.href ? "Entrar no Club" : "Em breve"}
             mark={
               <Image
                 src="/brand/logo-vdo-club.png"

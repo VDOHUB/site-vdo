@@ -8,7 +8,7 @@ foi alterado: o levantamento foi só de leitura, nas pastas irmãs do site.
 
 | Arquivo | Uso |
 | --- | --- |
-| `viver-de-obra-preto-amarelo.png` (e `@2x`) | Logo Viver de Obra Engenharia para **fundos escuros** (fundo transparente, letras claras) |
+| `viver-de-obra-preto-amarelo.png` (e `@2x`) | Logo Viver de Obra Engenharia para **fundos escuros** (fundo sólido grafite `#1d1d1b`, não transparente) |
 | `viver-de-obra-branco-amarelo.png` (e `@2x`) | Logo Viver de Obra Engenharia para **fundos claros** (letras escuras) |
 | `vdo-hub.png` (e `@2x`) | Logo do VDO Hub (fundo bege) |
 | `vdo-club.png` (e `@2x`) | Logo do VDO Club (fundo creme) |
@@ -58,7 +58,7 @@ Projeto Next.js (App Router). Hoje o "logo" é um quadrado com as letras **VC** 
 | Páginas legais | `src/components/legal-layout.tsx` | Conferir o cabeçalho e aplicar o mesmo padrão |
 
 Passos: copiar `entrega/logos/vdo-club.png` e `vdo-club@2x.png` para `public/`. O site da Viver de
-Obra já usa o mesmo arquivo no menu "Acessar" (`/brand/logo-vdo-club.png`).
+Obra usa a logo do Club no card do Ecossistema da Home (`/brand/logo-vdo-club.png`), não no menu "Acessar".
 
 ## 3. Gerador de Contratos (`automacao_contratos`)
 

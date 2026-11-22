@@ -11,6 +11,7 @@ export default function Page() {
   const social = [
     { label: "Instagram", href: SITE.social.instagram },
     { label: "YouTube", href: SITE.social.youtube },
+    { label: "Google Meu Negócio", href: SITE.social.google },
     { label: "Facebook", href: SITE.social.facebook },
   ].filter((s): s is { label: string; href: string } => Boolean(s.href));
 

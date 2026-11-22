@@ -1,3 +1,4 @@
+import { unstable_rethrow } from "next/navigation";
 import { createServerClient } from "@/lib/supabase/server";
 import type { Foto, Obra } from "./types";
 
@@ -54,6 +55,8 @@ export async function listObras(
       .filter((o) => o.publicado !== false)
       .map(({ obra_fotos, ...obra }) => ({ ...obra, fotos: sortFotos(obra_fotos) }));
   } catch (e) {
+    // Sinais internos do Next (prerender/postpone) não são erro de dados: deixa subir.
+    unstable_rethrow(e);
     console.error("[obras] listObras failed", e);
     return [];
   }
@@ -79,6 +82,7 @@ export async function getObra(slug: string): Promise<(Obra & { fotos: Foto[] }) 
     const fotos = sortFotos(obra_fotos);
     return { ...obra, fotos };
   } catch (e) {
+    unstable_rethrow(e);
     console.error("[obras] getObra failed", e);
     return null;
   }

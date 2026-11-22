@@ -30,6 +30,7 @@ export const SITE = {
   hours: OPENING.label,
   social: {
     instagram: "https://www.instagram.com/viverdobra/",
+    google: "https://g.page/viver-de-obra-engenharia",
     youtube: "https://www.youtube.com/channel/UCqF-imgywwuURWTK-EQm7DQ",
     facebook: (process.env.NEXT_PUBLIC_FACEBOOK_URL || null) as string | null,
   },
@@ -43,7 +44,7 @@ export const NAV: { href: string; label: string }[] = [
   { href: "/contato", label: "Contato" },
 ];
 
-export const ACCESS: { label: string; desc: string; href: string }[] = [
+export const ACCESS: { label: string; desc: string; href: string | null }[] = [
   {
     label: "VDO Hub",
     desc: "Salas comerciais por assinatura",
@@ -52,7 +53,7 @@ export const ACCESS: { label: string; desc: string; href: string }[] = [
   {
     label: "VDO Club",
     desc: "Arquitetos e fornecedores",
-    href: process.env.NEXT_PUBLIC_VDOCLUB_URL ?? "#",
+    href: process.env.NEXT_PUBLIC_VDOCLUB_URL || null,
   },
   { label: "Adm Viver de Obra", desc: "Área interna da equipe", href: "/admin" },
 ];
