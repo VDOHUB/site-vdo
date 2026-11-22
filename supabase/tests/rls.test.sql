@@ -5,7 +5,7 @@
 begin;
 create extension if not exists pgtap with schema extensions;
 
-select plan(106);
+select plan(107);
 
 -- ---------------------------------------------------------------------------
 -- Fixtures (como postgres): usuarios de teste, obras publicada/rascunho, fotos.
@@ -135,14 +135,14 @@ select throws_ok($$select * from public.leads$$, '42501', null, 'anon: nao le le
 select throws_ok($$select * from public.recursos_internos$$, '42501', null, 'anon: nao le recursos_internos');
 select throws_ok($$select * from public.profiles$$, '42501', null, 'anon: nao le profiles');
 
-select lives_ok(
+select throws_ok(
   $$insert into public.leads (topico, nome, whatsapp, mensagem, status)
     values ('Orçamento', 'Anon Nova', '62999990001', 'quero um orcamento', 'nova')$$,
-  'anon: insere lead com status nova');
-select lives_ok(
-  $$insert into public.leads (topico, nome, whatsapp, mensagem, created_at)
-    values ('Sugestões', 'Anon Default', '62999990002', 'sugestao', '2000-01-01')$$,
-  'anon: insere lead sem status (default nova)');
+  '42501', null, 'anon: nao insere lead (so o servidor insere)');
+select throws_ok(
+  $$insert into public.leads (topico, nome, whatsapp, mensagem)
+    values ('Sugestões', 'Anon Default', '62999990002', 'sugestao')$$,
+  '42501', null, 'anon: nao insere lead sem status');
 select throws_ok(
   $$insert into public.leads (topico, nome, whatsapp, mensagem, status)
     values ('Dúvidas', 'Anon Lida', '62999990003', 'x', 'lida')$$,
@@ -220,8 +220,17 @@ select throws_ok(
   $$insert into public.leads (topico, nome, whatsapp, mensagem, status)
     values ('Dúvidas', 'User Lida', '62999990005', 'x', 'lida')$$,
   '42501', null, 'usuario: lead com status lida e rejeitado');
+select throws_ok(
+  $$insert into public.leads (topico, nome, whatsapp, mensagem)
+    values ('Dúvidas', 'User Nova', '62999990006', 'x')$$,
+  '42501', null, 'usuario: nao insere lead nem como nova');
 
 reset role;
+
+-- leads de exemplo gravados como o servidor grava (service_role/postgres), para as checagens abaixo
+insert into public.leads (topico, nome, whatsapp, mensagem, created_at) values
+  ('Orçamento', 'Anon Nova', '62999990001', 'quero um orcamento', '2000-01-01'),
+  ('Sugestões', 'Anon Default', '62999990002', 'sugestao', '2000-01-01');
 
 -- efeitos das tentativas do usuario comum (verificado como postgres)
 select is((select titulo from public.obras where slug = 'teste-publicada'), 'Teste Publicada',
