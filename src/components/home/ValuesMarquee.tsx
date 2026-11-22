@@ -1,7 +1,10 @@
 "use client";
 
 import { Fragment, useEffect, useRef, useState } from "react";
-import ScrollVelocity from "@/components/reactbits/ScrollVelocity";
+import dynamic from "next/dynamic";
+
+// Código de animação (motion) só baixa quando a faixa se aproxima da tela; até lá, linha estática.
+const ScrollVelocity = dynamic(() => import("@/components/reactbits/ScrollVelocity"), { ssr: false });
 
 const WORDS = [
   "Execução de obras",

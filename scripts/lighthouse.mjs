@@ -64,4 +64,10 @@ try {
   server?.kill();
   try { rmSync(profile, { recursive: true, force: true }); } catch {}
 }
+if (failed) {
+  console.error(
+    "Abaixo do mínimo. Atenção: o Lighthouse local oscila muito (ruído de CPU/lab, 10+ pontos entre execuções, mesmo em página vazia). " +
+      "Reexecute e confirme no Vercel/PageSpeed Insights antes de tratar como regressão. Não use este script como bloqueio de CI.",
+  );
+}
 process.exit(failed ? 1 : 0);

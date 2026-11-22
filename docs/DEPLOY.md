@@ -167,6 +167,10 @@ Faça com o site novo já no ar (no endereço provisório e, depois, no domínio
 - **Peso do repositório e dos vídeos:** os vídeos do topo (de 7 a 17 MB cada) e as fotos somam cerca de
   52 MB no Git. Funciona, mas deixa clonar e publicar mais lento. Sugestão: usar Git LFS ou hospedar
   os vídeos num CDN/Storage.
+- **Desempenho (Lighthouse mobile da Home):** medido em ambiente local, acessibilidade 98, boas práticas 100
+  e SEO 100, mas desempenho com mediana de cerca de 65-70 (meta: 85; faixa observada 49-82), com LCP ~3,5 s
+  e CLS 0. A medição local oscila muito entre execuções; **meça de novo no Vercel/PageSpeed Insights**
+  depois do deploy. Se continuar abaixo de 85, os pontos a atacar são os vídeos pesados (CDN) e o JavaScript inicial.
 - **Pendências de conteúdo:** o link do Facebook (`NEXT_PUBLIC_FACEBOOK_URL`) e o texto final da lista
   de serviços (página Sobre, `SERVICOS` em `src/app/sobre/page.tsx`) dependem de confirmação do Carlos.
   Descrição e local das duas obras do seed também são provisórios: edite pelo Adm.

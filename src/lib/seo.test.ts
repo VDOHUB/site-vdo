@@ -52,6 +52,15 @@ describe("siteUrl", () => {
   });
 });
 
+describe("horário único", () => {
+  it("SITE.hours e o JSON-LD vêm da mesma constante", async () => {
+    const { OPENING, SITE } = await import("./site");
+    const { localBusinessJsonLd } = await import("./seo");
+    expect(SITE.hours).toBe(OPENING.label);
+    expect(localBusinessJsonLd().openingHoursSpecification).toMatchObject({ opens: OPENING.opens, closes: OPENING.closes });
+  });
+});
+
 describe("localBusinessJsonLd", () => {
   it("monta GeneralContractor com dados do SITE e omite o que é nulo", async () => {
     vi.stubEnv("NEXT_PUBLIC_SITE_URL", "https://viverdeobra.com");

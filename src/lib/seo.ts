@@ -1,4 +1,4 @@
-import { SITE } from "./site";
+import { OPENING, SITE } from "./site";
 
 const FALLBACK_URL = "https://viverdeobra.com";
 
@@ -32,9 +32,9 @@ export function localBusinessJsonLd(): Record<string, unknown> {
     },
     openingHoursSpecification: {
       "@type": "OpeningHoursSpecification",
-      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-      opens: "08:00",
-      closes: "18:00",
+      dayOfWeek: [...OPENING.days],
+      opens: OPENING.opens,
+      closes: OPENING.closes,
     },
     ...(sameAs.length ? { sameAs } : {}),
   };

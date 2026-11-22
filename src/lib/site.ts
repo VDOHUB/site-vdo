@@ -1,3 +1,11 @@
+/** Horário de atendimento: fonte única para o texto exibido e para o JSON-LD. */
+export const OPENING = {
+  days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+  opens: "08:00",
+  closes: "18:00",
+  label: "Seg a Sáb, 8h às 18h",
+} as const;
+
 const PHONE = "5562992445881";
 
 export const SITE = {
@@ -19,7 +27,7 @@ export const SITE = {
     postalCode: "75110-810",
   },
   phone: "+" + PHONE,
-  hours: "Seg a Sáb, 8h às 18h",
+  hours: OPENING.label,
   social: {
     instagram: "https://www.instagram.com/viverdobra/",
     youtube: "https://www.youtube.com/channel/UCqF-imgywwuURWTK-EQm7DQ",

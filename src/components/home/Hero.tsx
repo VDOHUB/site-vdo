@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import BlurText from "@/components/reactbits/BlurText";
 import { hero } from "@/lib/media";
 import { useVideoAllowed } from "./useVideoAllowed";
 
@@ -98,28 +97,23 @@ export function Hero() {
       <div className="hero-veil" aria-hidden="true" />
 
       <div className="hero-content">
-        <p className="eyebrow hero-in" style={{ animationDelay: "0.05s" }}>
+        <p className="eyebrow hero-in">
           Construtora boutique · Anápolis, GO
         </p>
         <h1 id="hero-title" className="hero-title" aria-label={TITLE}>
-          <BlurText
-            as="span"
-            text={TITLE}
-            trigger="load"
-            animateBy="words"
-            direction="bottom"
-            distance={28}
-            blur={14}
-            delay={110}
-            stepDuration={0.42}
-            className="hero-title-words"
-          />
+          {TITLE.split(" ").map((w, i) => (
+            <span key={i}>
+              <span className="hero-word" style={{ animationDelay: `${i * 0.06}s` }}>
+                {w}
+              </span>{" "}
+            </span>
+          ))}
         </h1>
-        <p className="hero-lead hero-in" style={{ animationDelay: "0.85s" }}>
+        <p className="hero-lead hero-in">
           Execução de obras com segurança, prazo combinado e acompanhamento de perto. Honestidade,
           transparência e compromisso do primeiro tijolo à entrega.
         </p>
-        <div className="hero-cta hero-in" style={{ animationDelay: "1s" }}>
+        <div className="hero-cta hero-in">
           <Link className="btn pri" href="/catalogo">
             Ver Catálogo de Obras <span aria-hidden="true">→</span>
           </Link>
