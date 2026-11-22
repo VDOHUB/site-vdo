@@ -2,6 +2,9 @@ const PHONE = "5562992445881";
 
 export const SITE = {
   name: "Viver de Obra",
+  legalName: "Viver de Obra Engenharia",
+  description:
+    "Construtora boutique em Anápolis, Goiás. Obra sem dor de cabeça: execução com segurança, prazo combinado e acompanhamento de perto.",
   whatsapp: "(62) 99244-5881",
   whatsappUrl(msg?: string): string {
     const base = `https://api.whatsapp.com/send?phone=${PHONE}`;
@@ -9,6 +12,13 @@ export const SITE = {
   },
   address:
     "Av. São Francisco de Assis, 181, Galeria Nazir, Sala 05, 2º piso, Jundiaí, Anápolis-GO, 75110-810",
+  addressParts: {
+    street: "Av. São Francisco de Assis, 181, Galeria Nazir, Sala 05, 2º piso, Jundiaí",
+    city: "Anápolis",
+    region: "GO",
+    postalCode: "75110-810",
+  },
+  phone: "+" + PHONE,
   hours: "Seg a Sáb, 8h às 18h",
   social: {
     instagram: "https://www.instagram.com/viverdobra/",

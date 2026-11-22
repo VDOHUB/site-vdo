@@ -1,7 +1,11 @@
 import Image from "next/image";
 import { photoUrl } from "@/lib/photo";
 
-export const metadata = { title: "Sobre" };
+export const metadata = {
+  title: "Sobre",
+  description:
+    "Conheça a Viver de Obra Engenharia: dois sócios e uma equipe de obra dedicada, com honestidade, transparência e compromisso do primeiro tijolo à entrega.",
+};
 
 const VALORES = ["Honestidade", "Transparência", "Compromisso"];
 
@@ -10,7 +14,7 @@ const VALORES = ["Honestidade", "Transparência", "Compromisso"];
 const SERVICOS: { titulo: string; texto: string }[] = [
   {
     titulo: "Execução de obras",
-    texto: "Do projeto à entrega, com equipe própria e acompanhamento de perto em cada etapa.",
+    texto: "Construção do projeto à entrega, com equipe de obra dedicada e acompanhamento de perto em cada etapa.",
   },
   {
     titulo: "Reformas",
@@ -18,7 +22,7 @@ const SERVICOS: { titulo: string; texto: string }[] = [
   },
   {
     titulo: "Impermeabilização",
-    texto: "Soluções contra infiltrações, com diagnóstico da causa e execução cuidadosa.",
+    texto: "Soluções contra infiltrações, com diagnóstico da causa antes de executar o serviço.",
   },
 ];
 

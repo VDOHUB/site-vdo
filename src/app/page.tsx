@@ -7,6 +7,7 @@ import { Hero } from "@/components/home/Hero";
 import { LiveObras } from "@/components/home/LiveObras";
 import { ValuesMarquee } from "@/components/home/ValuesMarquee";
 import { ObraGridSkeleton } from "@/components/obras/ObraGridSkeleton";
+import { localBusinessJsonLd } from "@/lib/seo";
 import { SITE } from "@/lib/site";
 
 // Frescor dos dados: com `cacheComponents` o Next 16 proíbe `export const revalidate`
@@ -19,6 +20,10 @@ const VALORES =["Honestidade", "Transparência", "Compromisso"];
 export default function Home() {
   return (
     <main className="home">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJsonLd()).replace(/</g, "\\u003c") }}
+      />
       <Hero />
       <ValuesMarquee />
 

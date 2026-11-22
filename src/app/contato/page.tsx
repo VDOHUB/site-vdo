@@ -1,7 +1,11 @@
 import { ContactForm } from "@/components/contato/ContactForm";
 import { SITE } from "@/lib/site";
 
-export const metadata = { title: "Contato" };
+export const metadata = {
+  title: "Contato",
+  description:
+    "Peça seu orçamento à Viver de Obra: formulário, WhatsApp e endereço em Anápolis, GO. Atendimento de segunda a sábado, das 8h às 18h.",
+};
 
 export default function Page() {
   const social = [
