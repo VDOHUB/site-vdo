@@ -61,6 +61,15 @@ describe("Server Actions do Adm", () => {
     expect(revalidatePath).not.toHaveBeenCalled();
   });
 
+  it.each(Object.keys(ARGS))("%s com argumentos INVALIDOS tambem para no requireAdmin (guard antes da validacao)", async (name) => {
+    const mod = (await import("./actions")) as unknown as Record<string, (...a: unknown[]) => Promise<unknown>>;
+    const bad = ARGS[name].map((a) => (a instanceof FormData ? new FormData() : Array.isArray(a) ? ["nao-e-uuid"] : typeof a === "string" ? "1 or 1=1" : a));
+    await expect(mod[name](...bad)).rejects.toBe(DENIED);
+    expect(requireAdmin).toHaveBeenCalledTimes(1);
+    expect(createServerClient).not.toHaveBeenCalled();
+    expect(revalidatePath).not.toHaveBeenCalled();
+  });
+
   it("com admin, dados invalidos nao chegam ao banco", async () => {
     const from = vi.fn();
     requireAdmin.mockResolvedValue({ supabase: { from, storage: { from } }, userId: UUID });
@@ -78,6 +87,90 @@ describe("Server Actions do Adm", () => {
     expect(await mod.saveDestaques(["x"])).toMatchObject({ ok: false });
     expect(await mod.togglePublicado(UUID, "sim" as unknown as boolean)).toMatchObject({ ok: false });
     expect(from).not.toHaveBeenCalled();
+  });
+
+  describe("com admin (Supabase falso)", () => {
+    type Op = [string, ...unknown[]];
+    type Query = { table: string; ops: Op[] };
+    let queries: Query[];
+    let storageCalls: string[];
+
+    /** Builder encadeavel: grava as chamadas e resolve com `respond(query)` ao ser aguardado. */
+    function fake(respond: (q: Query) => { data?: unknown; error?: unknown }) {
+      queries = [];
+      storageCalls = [];
+      const from = (table: string) => {
+        const q: Query = { table, ops: [] };
+        queries.push(q);
+        const b: Record<string, unknown> = {};
+        for (const m of ["select", "eq", "in", "like", "order", "limit", "update", "insert", "delete", "maybeSingle", "single"]) {
+          b[m] = (...args: unknown[]) => {
+            q.ops.push([m, ...args]);
+            return b;
+          };
+        }
+        b.then = (res: (v: unknown) => unknown, rej: (e: unknown) => unknown) =>
+          Promise.resolve({ data: null, error: null, ...respond(q) }).then(res, rej);
+        return b;
+      };
+      const storage = {
+        from: () => ({
+          list: async () => {
+            storageCalls.push("list");
+            return { data: [], error: null };
+          },
+          remove: async () => {
+            storageCalls.push("remove");
+            return { data: [], error: null };
+          },
+        }),
+      };
+      requireAdmin.mockResolvedValue({ supabase: { from, storage }, userId: UUID });
+    }
+    const has = (q: Query, m: string) => q.ops.some((o) => o[0] === m);
+
+    it("addFoto recusa caminho ja registrado (sem inserir nem mexer no Storage)", async () => {
+      const path = `uploads/${UUID}/aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee.webp`;
+      fake((q) => {
+        if (q.table === "obras") return { data: { titulo: "Casa", slug: "casa" } };
+        if (q.table === "obra_fotos" && q.ops.some((o) => o[0] === "eq" && o[1] === "path")) return { data: { id: UUID } };
+        return {};
+      });
+      const mod = await import("./actions");
+      expect(await mod.addFoto(UUID, path)).toEqual({ ok: false, error: "Esta foto já foi adicionada." });
+      expect(queries.some((q) => has(q, "insert"))).toBe(false);
+      expect(storageCalls).toEqual([]);
+    });
+
+    it("saveDestaques permuta so os slots de ordem das obras escolhidas e tira o destaque das demais", async () => {
+      const A = "aaaaaaaa-0000-4000-8000-000000000001";
+      const B = "bbbbbbbb-0000-4000-8000-000000000002";
+      const OLD = "dddddddd-0000-4000-8000-000000000004";
+      fake((q) => {
+        if (q.table !== "obras" || !has(q, "select") || has(q, "update")) return {};
+        if (has(q, "in")) return { data: [{ id: A, ordem: 4 }, { id: B, ordem: 9 }] }; // ordem atual das escolhidas
+        return { data: [{ id: A }, { id: OLD }] }; // destaques atuais
+      });
+      const mod = await import("./actions");
+      expect(await mod.saveDestaques([B, A])).toEqual({ ok: true });
+      const updates = queries.filter((q) => has(q, "update")).map((q) => ({
+        set: q.ops.find((o) => o[0] === "update")![1],
+        where: q.ops.filter((o) => o[0] === "eq" || o[0] === "in").map((o) => o.slice(1)),
+      }));
+      expect(updates).toContainEqual({ set: { destaque: false }, where: [["id", [OLD]]] });
+      expect(updates).toContainEqual({ set: { destaque: true, ordem: 4 }, where: [["id", B]] });
+      expect(updates).toContainEqual({ set: { destaque: true, ordem: 9 }, where: [["id", A]] });
+      expect(updates).toHaveLength(3);
+      expect(revalidatePath).toHaveBeenCalledWith("/catalogo");
+    });
+
+    it("saveDestaques falha se alguma obra escolhida nao existe", async () => {
+      const A = "aaaaaaaa-0000-4000-8000-000000000001";
+      fake((q) => (has(q, "in") && has(q, "select") ? { data: [] } : { data: [] }));
+      const mod = await import("./actions");
+      expect(await mod.saveDestaques([A])).toMatchObject({ ok: false });
+      expect(queries.some((q) => has(q, "update"))).toBe(false);
+    });
   });
 
   it("o codigo do Adm nao importa o cliente de servico", () => {

@@ -155,3 +155,18 @@ export function validateRecursoInput(raw: Record<string, unknown>): Validation<R
   if (Object.keys(errors).length) return { ok: false, errors };
   return { ok: true, data: { titulo, descricao, url, tipo: tipo!, ordem: ordem ?? 0 } };
 }
+
+/**
+ * Nova ordem dos destaques SEM mexer no resto do catalogo: pega os valores de `ordem`
+ * que as obras escolhidas ja ocupam, ordena crescente e os distribui na ordem escolhida.
+ * So as obras escolhidas mudam; o conjunto de valores e o mesmo (nenhuma duplicata nova).
+ * `null` se houver id repetido ou sem ordem atual.
+ */
+export function permuteOrdem(
+  current: ReadonlyMap<string, number>,
+  chosen: readonly string[],
+): { id: string; ordem: number }[] | null {
+  if (new Set(chosen).size !== chosen.length || !chosen.every((id) => current.has(id))) return null;
+  const slots = chosen.map((id) => current.get(id)!).sort((a, b) => a - b);
+  return chosen.map((id, i) => ({ id, ordem: slots[i] }));
+}

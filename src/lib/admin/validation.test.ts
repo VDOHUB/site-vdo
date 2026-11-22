@@ -3,6 +3,7 @@ import {
   OBRA_LIMITS,
   isUuid,
   parseLeadStatus,
+  permuteOrdem,
   slugify,
   uniqueSlug,
   validateObraInput,
@@ -195,5 +196,44 @@ describe("validateRecursoInput", () => {
     if (v.ok) return;
     expect(v.errors.tipo).toBe("Escolha um tipo válido.");
     expect(v.errors.titulo).toBe("Informe o título.");
+  });
+});
+
+describe("permuteOrdem", () => {
+  const A = "aaaaaaaa-0000-4000-8000-000000000001";
+  const B = "bbbbbbbb-0000-4000-8000-000000000002";
+  const C = "cccccccc-0000-4000-8000-000000000003";
+
+  it("reusa os slots de ordem que as obras escolhidas ja ocupam, na nova ordem", () => {
+    // catalogo: X=1, A=2, Y=3, B=5, C=8 (X e Y nao sao destaque e nao entram)
+    const current = new Map([[A, 2], [B, 5], [C, 8]]);
+    expect(permuteOrdem(current, [C, A, B])).toEqual([
+      { id: C, ordem: 2 },
+      { id: A, ordem: 5 },
+      { id: B, ordem: 8 },
+    ]);
+  });
+
+  it("preserva o conjunto de valores e nao cria duplicatas", () => {
+    const current = new Map([[A, 7], [B, 3], [C, 4]]);
+    const out = permuteOrdem(current, [B, C, A])!;
+    expect(out.map((u) => u.ordem).sort((x, y) => x - y)).toEqual([3, 4, 7]);
+    expect(new Set(out.map((u) => u.ordem)).size).toBe(3);
+    expect(out.map((u) => u.id)).toEqual([B, C, A]);
+  });
+
+  it("so devolve as obras escolhidas (as demais nao mudam)", () => {
+    const current = new Map([[A, 1], [B, 2]]);
+    expect(permuteOrdem(current, [B])!.map((u) => u.id)).toEqual([B]);
+  });
+
+  it("selecao vazia e de um elemento", () => {
+    expect(permuteOrdem(new Map(), [])).toEqual([]);
+    expect(permuteOrdem(new Map([[A, 9]]), [A])).toEqual([{ id: A, ordem: 9 }]);
+  });
+
+  it("rejeita ids duplicados ou sem ordem atual", () => {
+    expect(permuteOrdem(new Map([[A, 1]]), [A, A])).toBeNull();
+    expect(permuteOrdem(new Map([[A, 1]]), [A, B])).toBeNull();
   });
 });

@@ -12,6 +12,7 @@ import { isUploadPathFor, validatePhoto } from "@/lib/admin/upload";
 import {
   isUuid,
   parseLeadStatus,
+  permuteOrdem,
   slugify,
   uniqueSlug,
   validateObraInput,
@@ -128,6 +129,10 @@ export async function addFoto(obraId: string, path: string): Promise<ActionResul
   const { data: obra } = await supabase.from("obras").select("titulo, slug").eq("id", obraId).maybeSingle();
   if (!obra) return fail("Obra não encontrada.");
   const { titulo, slug } = obra as { titulo: string; slug: string };
+
+  // Mesmo arquivo registrado duas vezes: apagar uma linha removeria o arquivo da outra.
+  const { data: dup } = await supabase.from("obra_fotos").select("id").eq("path", path).maybeSingle();
+  if (dup) return fail("Esta foto já foi adicionada.");
 
   // Confere o objeto no Storage (o bucket tambem limita tipo e tamanho).
   const folder = `uploads/${obraId}`;
@@ -252,15 +257,27 @@ export async function saveDestaques(ids: string[]): Promise<ActionResult> {
   if (!Array.isArray(ids) || ids.length > MAX_DESTAQUES || !ids.every(isUuid) || new Set(ids).size !== ids.length) {
     return fail("Seleção inválida.");
   }
+  // Ordem dos destaques = permutacao dos slots de `ordem` que as escolhidas ja ocupam:
+  // o catalogo (ordenado por `ordem`) nao muda para as demais obras e nao surgem empates novos.
+  let updates: { id: string; ordem: number }[] = [];
+  if (ids.length) {
+    const { data: escolhidas, error: e0 } = await supabase.from("obras").select("id, ordem").in("id", ids);
+    if (e0) return fail(GENERIC);
+    const current = new Map(((escolhidas ?? []) as { id: string; ordem: number }[]).map((o) => [o.id, o.ordem]));
+    const perm = permuteOrdem(current, ids);
+    if (!perm) return fail("Alguma obra escolhida não existe mais. Recarregue a página.");
+    updates = perm;
+  }
   const { data: atuais, error: e1 } = await supabase.from("obras").select("id").eq("destaque", true);
   if (e1) return fail(GENERIC);
   const remover = ((atuais ?? []) as { id: string }[]).map((o) => o.id).filter((id) => !ids.includes(id));
   if (remover.length) {
+    // Sai dos destaques sem mexer na `ordem`.
     const { error } = await supabase.from("obras").update({ destaque: false }).in("id", remover);
     if (error) return fail(GENERIC);
   }
   const results = await Promise.all(
-    ids.map((id, i) => supabase.from("obras").update({ destaque: true, ordem: i + 1 }).eq("id", id)),
+    updates.map((u) => supabase.from("obras").update({ destaque: true, ordem: u.ordem }).eq("id", u.id)),
   );
   if (results.some((r) => r.error)) return fail(GENERIC);
   revalidatePublic();
