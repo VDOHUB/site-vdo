@@ -12,7 +12,7 @@ vi.mock("@/components/reactbits/TiltedCard", () => ({
 const base: Obra = {
   id: "1", slug: "casa-jardim", titulo: "Casa Jardim", descricao: "", local: "Anápolis",
   tipo: "residencial", status: "a_venda", progresso: null, preco: null, area: "180 m²",
-  quartos: 3, vagas: 2, ordem: 0, destaque: false, publicado: true, created_at: "",
+  quartos: 3, vagas: 2, ordem: 0, destaque: false, destaque_ordem: null, publicado: true, created_at: "",
 };
 
 afterEach(cleanup);

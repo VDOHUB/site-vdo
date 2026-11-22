@@ -13,6 +13,8 @@ export type Obra = {
   vagas: number | null;
   ordem: number;
   destaque: boolean;
+  /** Posicao nos destaques da Home (1..n); null fora dos destaques. */
+  destaque_ordem: number | null;
   publicado: boolean;
   created_at: string;
 };

@@ -8,6 +8,8 @@ export type ObraFilter = {
   status?: Obra["status"][];
   tipo?: Obra["tipo"];
   destaque?: boolean;
+  /** "destaque_ordem": posicao definida em Destaques da Home (nulls por ultimo), depois `ordem`. */
+  orderBy?: "ordem" | "destaque_ordem";
 };
 
 /** Sem Supabase configurado (build, testes) a camada devolve vazio em vez de lancar. */
@@ -41,6 +43,7 @@ export async function listObras(
     if (filter.status?.length) q = q.in("status", filter.status);
     if (filter.tipo) q = q.eq("tipo", filter.tipo);
     if (filter.destaque !== undefined) q = q.eq("destaque", filter.destaque);
+    if (filter.orderBy === "destaque_ordem") q = q.order("destaque_ordem", { ascending: true, nullsFirst: false });
     const { data, error } = await q.order("ordem", { ascending: true });
     if (error) {
       console.error("[obras] listObras failed", error);

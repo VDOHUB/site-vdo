@@ -54,7 +54,7 @@ select is(
 
 select columns_are('public', 'obras', array[
   'id', 'slug', 'titulo', 'descricao', 'local', 'tipo', 'status', 'progresso', 'preco', 'area',
-  'quartos', 'vagas', 'ordem', 'destaque', 'publicado', 'created_at'
+  'quartos', 'vagas', 'ordem', 'destaque', 'publicado', 'created_at', 'destaque_ordem'
 ], 'colunas de obras');
 select columns_are('public', 'obra_fotos', array['id', 'obra_id', 'path', 'ordem', 'alt'], 'colunas de obra_fotos');
 select columns_are('public', 'leads', array['id', 'topico', 'nome', 'whatsapp', 'mensagem', 'status', 'created_at'], 'colunas de leads');

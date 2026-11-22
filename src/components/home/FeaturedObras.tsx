@@ -6,7 +6,7 @@ const MAX = 3;
 
 /** Destaques do Catálogo de Obras: obras prontas marcadas como destaque no Adm. */
 export async function FeaturedObras() {
-  const obras = (await listObras({ destaque: true, status: ["pronta"], withFotos: true })).slice(0, MAX);
+  const obras = (await listObras({ destaque: true, status: ["pronta"], withFotos: true, orderBy: "destaque_ordem" })).slice(0, MAX);
 
   if (obras.length === 0) {
     return (

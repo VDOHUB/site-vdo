@@ -142,34 +142,66 @@ describe("Server Actions do Adm", () => {
       expect(storageCalls).toEqual([]);
     });
 
-    it("saveDestaques permuta so os slots de ordem das obras escolhidas e tira o destaque das demais", async () => {
-      const A = "aaaaaaaa-0000-4000-8000-000000000001";
-      const B = "bbbbbbbb-0000-4000-8000-000000000002";
-      const OLD = "dddddddd-0000-4000-8000-000000000004";
+    const A = "aaaaaaaa-0000-4000-8000-000000000001";
+    const B = "bbbbbbbb-0000-4000-8000-000000000002";
+    const OLD = "dddddddd-0000-4000-8000-000000000004";
+    const updatesOf = () =>
+      queries.filter((q) => has(q, "update")).map((q) => ({
+        set: q.ops.find((o) => o[0] === "update")![1],
+        where: q.ops.filter((o) => o[0] === "eq" || o[0] === "in").map((o) => o.slice(1)),
+      }));
+
+    it("saveDestaques grava destaque_ordem 1..n na ordem escolhida, limpa os removidos e nao toca em ordem", async () => {
       fake((q) => {
         if (q.table !== "obras" || !has(q, "select") || has(q, "update")) return {};
-        if (has(q, "in")) return { data: [{ id: A, ordem: 4 }, { id: B, ordem: 9 }] }; // ordem atual das escolhidas
+        if (has(q, "in")) return { data: [{ id: A }, { id: B }] }; // escolhidas existem
         return { data: [{ id: A }, { id: OLD }] }; // destaques atuais
       });
       const mod = await import("./actions");
       expect(await mod.saveDestaques([B, A])).toEqual({ ok: true });
-      const updates = queries.filter((q) => has(q, "update")).map((q) => ({
-        set: q.ops.find((o) => o[0] === "update")![1],
-        where: q.ops.filter((o) => o[0] === "eq" || o[0] === "in").map((o) => o.slice(1)),
-      }));
-      expect(updates).toContainEqual({ set: { destaque: false }, where: [["id", [OLD]]] });
-      expect(updates).toContainEqual({ set: { destaque: true, ordem: 4 }, where: [["id", B]] });
-      expect(updates).toContainEqual({ set: { destaque: true, ordem: 9 }, where: [["id", A]] });
+      const updates = updatesOf();
+      expect(updates).toContainEqual({ set: { destaque: false, destaque_ordem: null }, where: [["id", [OLD]]] });
+      expect(updates).toContainEqual({ set: { destaque: true, destaque_ordem: 1 }, where: [["id", B]] });
+      expect(updates).toContainEqual({ set: { destaque: true, destaque_ordem: 2 }, where: [["id", A]] });
       expect(updates).toHaveLength(3);
-      expect(revalidatePath).toHaveBeenCalledWith("/catalogo");
+      expect(updates.some((u) => "ordem" in (u.set as object))).toBe(false);
+      expect(revalidatePath).toHaveBeenCalledWith("/");
+    });
+
+    it("saveDestaques([]) tira todos os destaques", async () => {
+      fake((q) => (q.table === "obras" && has(q, "select") && !has(q, "update") ? { data: [{ id: A }, { id: OLD }] } : {}));
+      const mod = await import("./actions");
+      expect(await mod.saveDestaques([])).toEqual({ ok: true });
+      expect(updatesOf()).toEqual([{ set: { destaque: false, destaque_ordem: null }, where: [["id", [A, OLD]]] }]);
     });
 
     it("saveDestaques falha se alguma obra escolhida nao existe", async () => {
-      const A = "aaaaaaaa-0000-4000-8000-000000000001";
-      fake((q) => (has(q, "in") && has(q, "select") ? { data: [] } : { data: [] }));
+      fake(() => ({ data: [] }));
       const mod = await import("./actions");
       expect(await mod.saveDestaques([A])).toMatchObject({ ok: false });
       expect(queries.some((q) => has(q, "update"))).toBe(false);
+    });
+
+    it("saveObra ao criar usa ordem = maior ordem + 1 (obras novas nao empatam em 0)", async () => {
+      fake((q) => {
+        if (q.table !== "obras") return {};
+        if (has(q, "insert")) return { data: { id: UUID } };
+        if (has(q, "like")) return { data: [] };
+        return { data: { ordem: 7 } }; // maior ordem atual
+      });
+      const mod = await import("./actions");
+      await expect(mod.saveObra(fd({ titulo: "Casa Nova", tipo: "residencial", status: "pronta" }))).rejects.toThrow("NEXT_REDIRECT");
+      const ins = queries.find((q) => has(q, "insert"))!.ops.find((o) => o[0] === "insert")![1] as { ordem: number; slug: string };
+      expect(ins.ordem).toBe(8);
+      expect(ins.slug).toBe("casa-nova");
+    });
+
+    it("saveObra ao editar nao envia ordem", async () => {
+      fake((q) => (has(q, "update") ? { data: { id: UUID, slug: "casa" } } : {}));
+      const mod = await import("./actions");
+      expect(await mod.saveObra(fd({ id: UUID, titulo: "Casa", tipo: "residencial", status: "pronta" }))).toEqual({ ok: true, id: UUID });
+      const upd = queries.find((q) => has(q, "update"))!.ops.find((o) => o[0] === "update")![1] as object;
+      expect("ordem" in upd).toBe(false);
     });
   });
 

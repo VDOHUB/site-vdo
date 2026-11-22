@@ -9,12 +9,14 @@ async function Editor() {
   // So obras prontas e publicadas aparecem nos destaques da Home.
   const { data, error } = await supabase
     .from("obras")
-    .select("id, titulo, local, destaque, ordem")
+    .select("id, titulo, local, destaque, destaque_ordem, ordem")
     .eq("status", "pronta")
     .eq("publicado", true)
+    // Ordem atual da Home (destaque_ordem; nulls por ultimo), depois a do catalogo.
+    .order("destaque_ordem", { ascending: true, nullsFirst: false })
     .order("ordem", { ascending: true });
   if (error) return <p className="form-error" role="alert">Não foi possível carregar as obras agora.</p>;
-  const obras = (data ?? []) as { id: string; titulo: string; local: string; destaque: boolean; ordem: number }[];
+  const obras = (data ?? []) as { id: string; titulo: string; local: string; destaque: boolean; destaque_ordem: number | null; ordem: number }[];
   return <DestaquesEditor obras={obras} />;
 }
 

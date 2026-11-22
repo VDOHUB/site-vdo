@@ -52,6 +52,20 @@ describe("listObras", () => {
     expect(calls).toContainEqual(["order", "ordem", { ascending: true }]);
   });
 
+  it("orderBy destaque_ordem: posicao do destaque primeiro (nulls por ultimo), depois ordem", async () => {
+    await listObras({ destaque: true, orderBy: "destaque_ordem" });
+    const orders = calls.filter((c) => c[0] === "order");
+    expect(orders).toEqual([
+      ["order", "destaque_ordem", { ascending: true, nullsFirst: false }],
+      ["order", "ordem", { ascending: true }],
+    ]);
+  });
+
+  it("padrao continua so por ordem", async () => {
+    await listObras({ destaque: true });
+    expect(calls.filter((c) => c[0] === "order")).toEqual([["order", "ordem", { ascending: true }]]);
+  });
+
   it("sem withFotos usa select('*')", async () => {
     await listObras({});
     expect(calls).toContainEqual(["select", "*"]);

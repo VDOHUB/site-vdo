@@ -5,14 +5,14 @@
 -- Storage e feito a parte (os arquivos nao sao enviados por este seed).
 -- Descricao e local sao provisorios, ate o Carlos informar os definitivos.
 
-insert into public.obras (slug, titulo, descricao, local, tipo, status, ordem, destaque, publicado)
+insert into public.obras (slug, titulo, descricao, local, tipo, status, ordem, destaque, destaque_ordem, publicado)
 values
   ('dunas-douradas', 'Dunas Douradas',
    'Projeto residencial entregue pela Viver de Obra.', 'Anápolis, GO',
-   'residencial', 'pronta', 1, true, true),
+   'residencial', 'pronta', 1, true, 1, true),
   ('agencia-bussola', 'Agência Bússola',
    'Projeto corporativo entregue pela Viver de Obra.', 'Anápolis, GO',
-   'corporativo', 'pronta', 2, true, true)
+   'corporativo', 'pronta', 2, true, 2, true)
 on conflict (slug) do nothing;
 
 -- Dunas Douradas (19 fotos)

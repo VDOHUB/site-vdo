@@ -3,11 +3,12 @@
 import { useState, useTransition } from "react";
 import { saveDestaques } from "@/lib/admin/actions";
 
-type Item = { id: string; titulo: string; local: string; destaque: boolean; ordem: number };
+type Item = { id: string; titulo: string; local: string; destaque: boolean; destaque_ordem: number | null; ordem: number };
 const MAX = 12;
 const HOME = 3;
 
 export function DestaquesEditor({ obras }: { obras: Item[] }) {
+  // `obras` ja chega ordenada por destaque_ordem (posicao atual na Home).
   const [ids, setIds] = useState<string[]>(() => obras.filter((o) => o.destaque).map((o) => o.id));
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const [pending, start] = useTransition();

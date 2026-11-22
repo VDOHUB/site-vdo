@@ -190,6 +190,66 @@ test("admin marca uma mensagem do site como lida", async ({ page, baseURL }) => 
   expect(baseURL).toContain("3101");
 });
 
+test("destaques da Home seguem a ordem escolhida mesmo com obras empatadas em ordem 0", async ({ page }) => {
+  test.setTimeout(180_000);
+  const A = `${E2E_PREFIX} Dest A ${tag}`;
+  const B = `${E2E_PREFIX} Dest B ${tag}`;
+  // Duas obras prontas e publicadas com a MESMA ordem (0, o padrao da coluna).
+  const { error } = await sb().from("obras").insert([
+    { slug: `teste-e2e-dest-a-${tag}`, titulo: A, tipo: "residencial", status: "pronta", publicado: true, ordem: 0 },
+    { slug: `teste-e2e-dest-b-${tag}`, titulo: B, tipo: "corporativo", status: "pronta", publicado: true, ordem: 0 },
+  ]);
+  expect(error).toBeNull();
+  // Guarda os destaques atuais (seed) para restaurar no fim.
+  const { data: antes } = await sb().from("obras").select("id, destaque_ordem").eq("destaque", true);
+
+  const homeOrder = async () => {
+    await page.goto("/");
+    const cards = page.locator('section[aria-labelledby="destaques-title"] a.obra-card');
+    await expect(cards.first()).toBeVisible({ timeout: 30_000 });
+    return (await cards.allInnerTexts()).map((t) => (t.includes(A) ? "A" : t.includes(B) ? "B" : "outra"));
+  };
+  const salvar = async () => {
+    await page.getByRole("button", { name: "Salvar destaques" }).click();
+    await expect(page.getByRole("status").filter({ hasText: "Destaques salvos" })).toBeVisible();
+  };
+
+  try {
+    await loginAdmin(page);
+    await page.goto("/admin/destaques");
+    // Espera o editor (streamado no Suspense) e tira os destaques atuais; depois escolhe B e A.
+    await expect(page.getByRole("button", { name: "Salvar destaques" })).toBeVisible();
+    const tirar = page.getByRole("button", { name: /^Tirar / });
+    for (let n = await tirar.count(); n > 0; n--) {
+      await expect(async () => {
+        await tirar.first().click();
+        await expect(tirar).toHaveCount(n - 1, { timeout: 1000 });
+      }).toPass(); // repete se o clique chegar antes da hidratacao
+    }
+    await page.locator(".pick li", { hasText: B }).getByRole("button", { name: "Destacar" }).click();
+    await page.locator(".pick li", { hasText: A }).getByRole("button", { name: "Destacar" }).click();
+    await salvar();
+    const { data: rows } = await sb().from("obras").select("titulo, ordem, destaque_ordem").in("titulo", [A, B]).order("titulo");
+    expect(rows).toEqual([
+      { titulo: A, ordem: 0, destaque_ordem: 2 },
+      { titulo: B, ordem: 0, destaque_ordem: 1 },
+    ]); // `ordem` (catalogo) intacta
+    expect(await homeOrder()).toEqual(["B", "A"]);
+
+    // Troca: A sobe para o primeiro lugar.
+    await page.goto("/admin/destaques");
+    await page.getByRole("button", { name: `Subir ${A}` }).click();
+    await salvar();
+    expect(await homeOrder()).toEqual(["A", "B"]);
+  } finally {
+    // Restaura os destaques do seed.
+    await sb().from("obras").update({ destaque: false, destaque_ordem: null }).eq("destaque", true);
+    for (const o of (antes ?? []) as { id: string; destaque_ordem: number | null }[]) {
+      await sb().from("obras").update({ destaque: true, destaque_ordem: o.destaque_ordem }).eq("id", o.id);
+    }
+  }
+});
+
 test("admin exclui a obra e o arquivo some do Storage", async ({ page }) => {
   const { data: obra } = await sb().from("obras").select("id").like("titulo", TITULO).single();
   await loginAdmin(page);

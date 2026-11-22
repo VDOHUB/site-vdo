@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
   OBRA_LIMITS,
+  buildDestaqueUpdates,
   isUuid,
   parseLeadStatus,
-  permuteOrdem,
   slugify,
   uniqueSlug,
   validateObraInput,
@@ -199,41 +199,27 @@ describe("validateRecursoInput", () => {
   });
 });
 
-describe("permuteOrdem", () => {
+describe("buildDestaqueUpdates", () => {
   const A = "aaaaaaaa-0000-4000-8000-000000000001";
   const B = "bbbbbbbb-0000-4000-8000-000000000002";
   const C = "cccccccc-0000-4000-8000-000000000003";
 
-  it("reusa os slots de ordem que as obras escolhidas ja ocupam, na nova ordem", () => {
-    // catalogo: X=1, A=2, Y=3, B=5, C=8 (X e Y nao sao destaque e nao entram)
-    const current = new Map([[A, 2], [B, 5], [C, 8]]);
-    expect(permuteOrdem(current, [C, A, B])).toEqual([
-      { id: C, ordem: 2 },
-      { id: A, ordem: 5 },
-      { id: B, ordem: 8 },
+  it("posicao 1..n na ordem escolhida, independente da ordem do catalogo (todas com ordem 0)", () => {
+    // Nao recebe `ordem`: obras criadas no Adm empatadas em 0 nao afetam o resultado.
+    expect(buildDestaqueUpdates([C, A, B])).toEqual([
+      { id: C, destaque_ordem: 1 },
+      { id: A, destaque_ordem: 2 },
+      { id: B, destaque_ordem: 3 },
     ]);
+    expect(buildDestaqueUpdates([A, B, C])!.map((u) => u.destaque_ordem)).toEqual([1, 2, 3]);
   });
 
-  it("preserva o conjunto de valores e nao cria duplicatas", () => {
-    const current = new Map([[A, 7], [B, 3], [C, 4]]);
-    const out = permuteOrdem(current, [B, C, A])!;
-    expect(out.map((u) => u.ordem).sort((x, y) => x - y)).toEqual([3, 4, 7]);
-    expect(new Set(out.map((u) => u.ordem)).size).toBe(3);
-    expect(out.map((u) => u.id)).toEqual([B, C, A]);
+  it("um elemento e selecao vazia (vazia = limpar todos)", () => {
+    expect(buildDestaqueUpdates([A])).toEqual([{ id: A, destaque_ordem: 1 }]);
+    expect(buildDestaqueUpdates([])).toEqual([]);
   });
 
-  it("so devolve as obras escolhidas (as demais nao mudam)", () => {
-    const current = new Map([[A, 1], [B, 2]]);
-    expect(permuteOrdem(current, [B])!.map((u) => u.id)).toEqual([B]);
-  });
-
-  it("selecao vazia e de um elemento", () => {
-    expect(permuteOrdem(new Map(), [])).toEqual([]);
-    expect(permuteOrdem(new Map([[A, 9]]), [A])).toEqual([{ id: A, ordem: 9 }]);
-  });
-
-  it("rejeita ids duplicados ou sem ordem atual", () => {
-    expect(permuteOrdem(new Map([[A, 1]]), [A, A])).toBeNull();
-    expect(permuteOrdem(new Map([[A, 1]]), [A, B])).toBeNull();
+  it("rejeita ids duplicados", () => {
+    expect(buildDestaqueUpdates([A, B, A])).toBeNull();
   });
 });
