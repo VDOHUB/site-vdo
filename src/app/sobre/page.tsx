@@ -1,5 +1,4 @@
-import Image from "next/image";
-import { photoUrl } from "@/lib/photo";
+import { sociosFoto } from "@/lib/media";
 
 export const metadata = {
   title: "Sobre",
@@ -51,14 +50,11 @@ export default function Page() {
           </ul>
         </div>
         <figure className="split-media">
-          <Image
-            src={photoUrl("dunas-douradas/14-1600.webp", 1600)}
-            alt="Sala de estar integrada do projeto residencial Dunas Douradas, executado pela Viver de Obra"
-            width={1600}
-            height={1067}
-            sizes="(max-width: 820px) 100vw, 560px"
-            priority
-          />
+          <picture>
+            <source type="image/avif" srcSet={sociosFoto.avif.join(", ")} sizes="(max-width: 820px) 100vw, 560px" />
+            <source type="image/webp" srcSet={sociosFoto.webp.join(", ")} sizes="(max-width: 820px) 100vw, 560px" />
+            <img src={sociosFoto.fallback} width={sociosFoto.width} height={sociosFoto.height} alt={sociosFoto.alt} fetchPriority="high" decoding="async" />
+          </picture>
         </figure>
       </div>
 

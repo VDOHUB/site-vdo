@@ -5,6 +5,7 @@ import { EcosystemSection } from "@/components/home/EcosystemSection";
 import { FeaturedObras } from "@/components/home/FeaturedObras";
 import { Hero } from "@/components/home/Hero";
 import { LiveObras } from "@/components/home/LiveObras";
+import { VideoSection } from "@/components/home/VideoSection";
 import { ValuesMarquee } from "@/components/home/ValuesMarquee";
 import { ObraGridSkeleton } from "@/components/obras/ObraGridSkeleton";
 import { localBusinessJsonLd } from "@/lib/seo";
@@ -25,6 +26,7 @@ export default function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJsonLd()).replace(/</g, "\\u003c") }}
       />
       <Hero />
+      <VideoSection />
       <ValuesMarquee />
 
       <section className="band" aria-labelledby="destaques-title">

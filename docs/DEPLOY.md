@@ -146,7 +146,7 @@ painel do domínio; o site antigo volta a responder em minutos.
 
 Faça com o site novo já no ar (no endereço provisório e, depois, no domínio):
 
-- [ ] Home abre, o vídeo do topo toca e não há textos quebrados.
+- [ ] Home abre com a imagem dos sócios no topo, o vídeo institucional toca ao rolar até ele e o botão do WhatsApp aparece no canto.
 - [ ] Catálogo de Obras lista as obras e a galeria abre.
 - [ ] `/admin` leva ao login; entrar com o administrador criado no passo 3 funciona.
 - [ ] No Adm: criar uma obra de teste, publicar e ver no Catálogo; depois **despublicar** e confirmar
@@ -169,7 +169,7 @@ Faça com o site novo já no ar (no endereço provisório e, depois, no domínio
 - **Novas tabelas no Supabase:** o projeto não revoga os privilégios padrão do Supabase. Quem criar uma
   tabela nova precisa **ativar RLS e criar as policies** (e revogar `anon`/`authenticated`). Veja
   `0001_init.sql` como modelo. (A migração 0004 já tira esses privilégios padrão para tabelas novas.)
-- **Peso do repositório e dos vídeos:** os vídeos do topo (de 7 a 17 MB cada) e as fotos somam cerca de
+- **Peso do repositório e dos vídeos:** os vídeos institucionais (de 7 a 17 MB cada) e as fotos somam cerca de
   52 MB no Git. Funciona, mas deixa clonar e publicar mais lento. Sugestão: usar Git LFS ou hospedar
   os vídeos num CDN/Storage.
 - **Desempenho (Lighthouse mobile da Home):** medido em ambiente local, acessibilidade 98, boas práticas 100

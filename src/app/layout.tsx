@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { Bricolage_Grotesque, Instrument_Sans } from "next/font/google";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
+import { WhatsAppButton } from "@/components/site/WhatsAppButton";
 import { siteUrl } from "@/lib/seo";
 import { SITE } from "@/lib/site";
 import "./globals.css";
@@ -37,6 +38,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </Suspense>
         {children}
         <Footer />
+        <Suspense fallback={null}>
+          <WhatsAppButton />
+        </Suspense>
       </body>
     </html>
   );

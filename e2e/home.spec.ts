@@ -9,12 +9,14 @@ function collectErrors(page: Page): string[] {
   return errors;
 }
 
-test("Home carrega com hero em vídeo, seções e sem erros no console", async ({ page }) => {
+test("Home carrega com hero em imagem, vídeo institucional, seções e sem erros no console", async ({ page }) => {
   const errors = collectErrors(page);
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1, name: "Obra sem dor de cabeça." })).toBeVisible();
-  await expect(page.locator(".hero video")).toHaveCount(1);
-  await expect(page.locator(".hero video source")).toHaveCount(3);
+  await expect(page.locator(".hero video")).toHaveCount(0);
+  await expect(page.locator(".hero-img")).toBeVisible();
+  await expect(page.getByRole("heading", { level: 2, name: "Conheça a Viver de Obra." })).toBeVisible();
+  await expect(page.locator("a.wa-fab")).toBeVisible();
   for (const name of [
     "Obras que falam por nós.",
     "Obras em andamento e imóveis à venda.",
@@ -24,7 +26,7 @@ test("Home carrega com hero em vídeo, seções e sem erros no console", async (
   ]) {
     await expect(page.getByRole("heading", { level: 2, name })).toBeVisible();
   }
-  // Deixa a animação do título e o vídeo começarem antes de checar o console.
+  // Deixa a animação do título começar antes de checar o console.
   await page.waitForTimeout(1500);
   expect(errors).toEqual([]);
 });
@@ -48,11 +50,18 @@ test("em 390px a Home não tem rolagem horizontal", async ({ page }) => {
   expect(overflow).toBeLessThanOrEqual(0);
 });
 
-test("com reduced motion não há <video>, só o poster", async ({ page }) => {
+test("com reduced motion o vídeo institucional não toca sozinho e mostra o play", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1, name: "Obra sem dor de cabeça." })).toBeVisible();
-  await page.waitForLoadState("networkidle");
-  await expect(page.locator("video")).toHaveCount(0);
-  await expect(page.locator(".hero-poster")).toBeVisible();
+  await page.locator(".vid-frame").scrollIntoViewIfNeeded();
+  await page.waitForTimeout(800);
+  await expect(page.locator("video")).toHaveCount(1);
+  expect(await page.locator("video").evaluate((v: HTMLVideoElement) => v.paused)).toBe(true);
+  await expect(page.locator(".vid-big")).toBeVisible();
+});
+
+test("WhatsApp flutuante não aparece no /admin/login", async ({ page }) => {
+  await page.goto("/admin/login");
+  await expect(page.getByRole("link", { name: "Falar no WhatsApp" })).toHaveCount(0);
 });

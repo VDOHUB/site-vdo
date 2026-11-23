@@ -24,7 +24,7 @@ test("envio vazio mostra erros por campo", async ({ page }) => {
 test("envio valido sem banco configurado mostra erro generico", async ({ page }) => {
   await ready(page);
   await page.getByLabel("Nome").fill("Maria Teste");
-  await page.getByLabel("WhatsApp").fill("(62) 99244-5881");
+  await page.getByLabel("WhatsApp", { exact: true }).fill("(62) 99244-5881");
   await page.getByLabel("Mensagem").fill("Quero um orçamento de reforma.");
   const send = page.getByRole("button", { name: "Enviar" });
   await expect(async () => {

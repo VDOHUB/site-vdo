@@ -51,7 +51,11 @@ npx supabase@latest stop
 seguindo `scripts/media-manifest.json` (que também guarda o texto alternativo de cada foto):
 
 - fotos: `public/obras/<slug>/<n>-800|1600.(webp|avif)`;
-- vídeo do topo: `public/hero/` (MP4 720p/1080p, WebM e poster).
+- vídeo institucional (seção logo abaixo do topo): `public/hero/` (MP4 720p/1080p, WebM).
+
+As imagens dos sócios (topo da Home em dupla exposição, foto limpa da página Sobre e poster do vídeo) vêm de
+`node scripts/build-socios.mjs` (precisa de ffmpeg e do vídeo original em `HERO_SOURCE`); ele também gera
+`src/lib/hero-blur.generated.ts`.
 
 O `supabase/seed.sql` repete as legendas do manifesto. Ao mudar um texto alternativo, altere os dois
 (há um teste em `src/lib/seo.test.ts` que confere se continuam iguais).
