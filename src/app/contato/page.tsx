@@ -1,3 +1,4 @@
+import { WhatsAppIcon } from "@/components/site/WhatsAppIcon";
 import { ContactForm } from "@/components/contato/ContactForm";
 import { SITE } from "@/lib/site";
 
@@ -10,7 +11,6 @@ export const metadata = {
 export default function Page() {
   const social = [
     { label: "Instagram", href: SITE.social.instagram },
-    { label: "YouTube", href: SITE.social.youtube },
     { label: "Google Meu Negócio", href: SITE.social.google },
     { label: "Facebook", href: SITE.social.facebook },
   ].filter((s): s is { label: string; href: string } => Boolean(s.href));
@@ -32,7 +32,7 @@ export default function Page() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            WhatsApp {SITE.whatsapp} <span aria-hidden="true">↗</span>
+            <WhatsAppIcon className="wa-ico" /> WhatsApp {SITE.whatsapp} <span aria-hidden="true">↗</span>
           </a>
         </div>
         <div className="info">

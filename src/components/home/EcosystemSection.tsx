@@ -9,7 +9,6 @@ function access(label: string) {
 export function EcosystemSection() {
   const hub = access("VDO Hub");
   const club = access("VDO Club");
-  const adm = access("Adm Viver de Obra");
 
   return (
     <section id="ecossistema" className="band band-alt" aria-labelledby="eco-title">
@@ -29,12 +28,12 @@ export function EcosystemSection() {
             meta="vdohub.viverdeobra.com"
             mark={
               <Image
-                src="/brand/logo-vdo-hub.png"
+                src="/brand/logo-vdo-hub-wide.png"
                 alt="VDO Hub"
-                width={500}
-                height={500}
+                width={360}
+                height={192}
                 className="eco-logo"
-                sizes="112px"
+                sizes="104px"
               />
             }
           />
@@ -42,7 +41,7 @@ export function EcosystemSection() {
             title="Clube de arquitetos e fornecedores"
             text="Rede selecionada, com cadastro aprovado, avaliações e orçamentos entre quem projeta e quem fornece."
             href={club?.href ?? null}
-            meta={club?.href ? "Entrar no Club" : "Em breve"}
+            meta={club?.href ? "vdoclub.viverdeobra.com" : "Em breve"}
             mark={
               <Image
                 src="/brand/logo-vdo-club.png"
@@ -53,14 +52,6 @@ export function EcosystemSection() {
                 sizes="104px"
               />
             }
-          />
-          <EcosystemCard
-            title="Contratos e planilhas"
-            text="Geração de contratos e acompanhamento de custos a partir das notas fiscais. Área restrita à equipe."
-            href={adm?.href ?? "/admin"}
-            meta="Adm Viver de Obra"
-            action="Entrar"
-            mark={<span className="wordmark">Automação</span>}
           />
         </div>
       </div>

@@ -1,3 +1,4 @@
+import { WhatsAppIcon } from "@/components/site/WhatsAppIcon";
 import { Suspense } from "react";
 import { ImovelCard } from "@/components/obras/ImovelCard";
 import { ObraGridSkeleton } from "@/components/obras/ObraGridSkeleton";
@@ -24,7 +25,7 @@ async function Lista() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Falar no WhatsApp <span aria-hidden="true">↗</span>
+          <WhatsAppIcon className="wa-ico" /> Falar no WhatsApp <span aria-hidden="true">↗</span>
         </a>
       </div>
     );

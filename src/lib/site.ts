@@ -29,9 +29,8 @@ export const SITE = {
   phone: "+" + PHONE,
   hours: OPENING.label,
   social: {
-    instagram: "https://www.instagram.com/viverdobra/",
+    instagram: "https://www.instagram.com/viverdeobraconstrutora/",
     google: "https://g.page/viver-de-obra-engenharia",
-    youtube: "https://www.youtube.com/channel/UCqF-imgywwuURWTK-EQm7DQ",
     facebook: (process.env.NEXT_PUBLIC_FACEBOOK_URL || null) as string | null,
   },
 };
@@ -53,7 +52,7 @@ export const ACCESS: { label: string; desc: string; href: string | null }[] = [
   {
     label: "VDO Club",
     desc: "Arquitetos e fornecedores",
-    href: process.env.NEXT_PUBLIC_VDOCLUB_URL || null,
+    href: process.env.NEXT_PUBLIC_VDOCLUB_URL || "https://vdoclub.viverdeobra.com/",
   },
   { label: "Adm Viver de Obra", desc: "Área interna da equipe", href: "/admin" },
 ];

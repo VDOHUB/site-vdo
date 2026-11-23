@@ -43,11 +43,11 @@ describe("Header: menu Acessar", () => {
     expect(btn.getAttribute("aria-expanded")).toBe("false");
   });
 
-  it("sem NEXT_PUBLIC_VDOCLUB_URL o VDO Club não aparece no menu", async () => {
+  it("sem NEXT_PUBLIC_VDOCLUB_URL o VDO Club usa o endereço padrão", async () => {
     vi.stubEnv("NEXT_PUBLIC_VDOCLUB_URL", "");
     await load();
     fireEvent.click(screen.getByRole("button", { name: /Acessar/ }));
-    expect(screen.queryByText("VDO Club")).toBeNull();
+    expect(screen.getByText("VDO Club").closest("a")?.getAttribute("href")).toBe("https://vdoclub.viverdeobra.com/");
     expect(screen.getByText("VDO Hub")).toBeTruthy();
   });
 });

@@ -85,8 +85,7 @@ describe("localBusinessJsonLd", () => {
       closes: "18:00",
     });
     expect(j.sameAs).toEqual([
-      "https://www.instagram.com/viverdobra/",
-      "https://www.youtube.com/channel/UCqF-imgywwuURWTK-EQm7DQ",
+      "https://www.instagram.com/viverdeobraconstrutora/",
       "https://g.page/viver-de-obra-engenharia",
     ]);
     expect(JSON.stringify(j)).not.toContain("null");

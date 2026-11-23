@@ -1,3 +1,4 @@
+import { WhatsAppIcon } from "@/components/site/WhatsAppIcon";
 import Link from "next/link";
 import { Suspense } from "react";
 import { EcosystemSection } from "@/components/home/EcosystemSection";
@@ -119,7 +120,7 @@ export default function Home() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Falar no WhatsApp <span aria-hidden="true">↗</span>
+                <WhatsAppIcon className="wa-ico" /> Falar no WhatsApp <span aria-hidden="true">↗</span>
               </a>
             </div>
           </div>

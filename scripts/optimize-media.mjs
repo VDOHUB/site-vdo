@@ -91,14 +91,16 @@ async function extractFromZip(zipPath, wanted, workDir) {
 
 async function encodeHero(src, outDir) {
   await mkdir(outDir, { recursive: true });
-  const common = ['-y', '-hide_banner', '-loglevel', 'error', '-i', src, '-an'];
+  const common = ['-y', '-hide_banner', '-loglevel', 'error', '-i', src];
   const h264 = ['-c:v', 'libx264', '-preset', 'slow', '-pix_fmt', 'yuv420p', '-movflags', '+faststart'];
+  const aac = ['-c:a', 'aac', '-b:a', '112k', '-ac', '2'];
+  const opus = ['-c:a', 'libopus', '-b:a', '96k', '-ac', '2'];
   const env = process.env;
   const jobs = [
-    ['hero-1080.mp4', ['-vf', 'scale=-2:1080', ...h264, '-crf', env.CRF1080 || '28']],
-    ['hero-720.mp4', ['-vf', 'scale=-2:720', ...h264, '-crf', env.CRF720 || '30']],
+    ['hero-1080.mp4', ['-vf', 'scale=-2:1080', ...h264, '-crf', env.CRF1080 || '28', ...aac]],
+    ['hero-720.mp4', ['-vf', 'scale=-2:720', ...h264, '-crf', env.CRF720 || '30', ...aac]],
     ['hero-1080.webm', ['-vf', 'scale=-2:1080', '-c:v', 'libvpx-vp9', '-b:v', '0', '-crf', env.CRFWEBM || '38',
-      '-row-mt', '1', '-deadline', 'good', '-cpu-used', '2']],
+      '-row-mt', '1', '-deadline', 'good', '-cpu-used', '2', ...opus]],
   ];
   const only = env.HERO_ONLY;
   for (const [name, args] of jobs) {
@@ -106,9 +108,7 @@ async function encodeHero(src, outDir) {
     console.log('ffmpeg', name);
     await run('ffmpeg', [...common, ...args, path.join(outDir, name)]);
   }
-  const png = await run('ffmpeg', ['-v', 'error', '-ss', '1', '-i', src, '-frames:v', '1',
-    '-f', 'image2pipe', '-c:v', 'png', '-'], true);
-  await sharp(png).resize({ width: 1600 }).webp({ quality: 75 }).toFile(path.join(outDir, 'hero-poster.webp'));
+  // O poster do vídeo vem de scripts/build-socios.mjs (video-poster.webp).
 }
 
 async function main() {

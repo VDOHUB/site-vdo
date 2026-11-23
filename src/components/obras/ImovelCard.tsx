@@ -1,3 +1,4 @@
+import { WhatsAppIcon } from "@/components/site/WhatsAppIcon";
 import { ObraCard } from "@/components/obras/ObraCard";
 import { imovelContactHref, imovelPreco } from "@/lib/obra-view";
 import type { Foto, Obra } from "@/lib/types";
@@ -27,7 +28,7 @@ export function ImovelCard({ obra }: { obra: Obra & { fotos?: Foto[] } }) {
         )}
         {href && (
           <a className="btn pri sm" href={href} target="_blank" rel="noopener noreferrer">
-            Falar no WhatsApp <span aria-hidden="true">↗</span>
+            <WhatsAppIcon className="wa-ico" /> Falar no WhatsApp <span aria-hidden="true">↗</span>
           </a>
         )}
       </div>

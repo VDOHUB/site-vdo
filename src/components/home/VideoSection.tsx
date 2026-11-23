@@ -113,8 +113,12 @@ export function VideoSection() {
   const toggleSound = () => {
     const v = videoRef.current;
     if (!v) return;
-    v.muted = sound; // desliga se estava ligado; só liga por clique do usuário
-    setSound(!sound);
+    const on = !sound; // o som só liga por clique do usuário
+    v.muted = !on;
+    if (on) v.volume = 1;
+    setSound(on);
+    // Se o navegador recusar tocar com som, volta ao mudo e o botão reflete o estado real.
+    if (on && !v.paused) v.play().catch(() => { v.muted = true; setSound(false); });
   };
 
   const seekFromPointer = (e: PointerEvent<HTMLDivElement>) => {
@@ -164,6 +168,7 @@ export function VideoSection() {
             aria-label="Vídeo institucional da Viver de Obra, com legendas"
             onPlay={() => setPlaying(true)}
             onPause={() => setPlaying(false)}
+            onVolumeChange={(e) => setSound(!e.currentTarget.muted && e.currentTarget.volume > 0)}
           >
             {near && video.sources.map((s) => <source key={s.src} src={s.src} type={s.type} media={s.media} />)}
           </video>

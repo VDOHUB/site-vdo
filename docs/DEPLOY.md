@@ -116,7 +116,7 @@ Para criar outro administrador no futuro, repita os passos 1 a 3.
 | `RESEND_API_KEY` | Chave do Resend (passo 5.2) | secreta |
 | `LEADS_FROM_EMAIL` | Remetente do aviso, no domínio verificado | ex.: `Site Viver de Obra <contato@viverdeobra.com>` |
 | `NEXT_PUBLIC_SITE_URL` | Endereço oficial do site | `https://viverdeobra.com` |
-| `NEXT_PUBLIC_VDOCLUB_URL` | Endereço do VDO Club (menu Acessar) | enquanto vazio, o item fica sem destino |
+| `NEXT_PUBLIC_VDOCLUB_URL` | Endereço do VDO Club (menu Acessar e card da Home) | opcional; padrão `https://vdoclub.viverdeobra.com/` |
 | `NEXT_PUBLIC_FACEBOOK_URL` | Página do Facebook | opcional; vazio = o link não aparece |
 
 5. Clique em **Deploy**. Em 2 a 3 minutos a Vercel mostra um endereço provisório
