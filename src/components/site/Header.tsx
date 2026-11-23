@@ -44,7 +44,7 @@ export function Header() {
     <header className="site-header">
       <div className="in">
         <Link href="/" aria-label="Viver de Obra Engenharia - início">
-          <Image src="/brand/logo-preto-amarelo.png" alt="Viver de Obra Engenharia" width={54} height={46} className="logo" priority style={{ height: 46, width: "auto" }} />
+          <Image src="/brand/logo-header.png" alt="Viver de Obra Engenharia" width={80} height={68} className="logo" priority />
         </Link>
         <button
           type="button"
@@ -57,11 +57,13 @@ export function Header() {
           Menu
         </button>
         <nav id="main-nav" aria-label="Principal" className={`main-nav${open ? " show" : ""}`}>
-          {NAV.map((n) => (
-            <Link key={n.href} href={n.href} className="link" onClick={close} aria-current={pathname === n.href ? "page" : undefined}>
-              {n.label}
-            </Link>
-          ))}
+          <div className="links">
+            {NAV.map((n) => (
+              <Link key={n.href} href={n.href} className="link" onClick={close} aria-current={pathname === n.href ? "page" : undefined}>
+                {n.label}
+              </Link>
+            ))}
+          </div>
           <div className="acc" ref={accRef}>
             <button type="button" ref={accBtnRef} aria-haspopup="true" aria-expanded={acc} aria-controls="acc-menu" onClick={() => setAcc((v) => !v)}>
               Acessar ▾
