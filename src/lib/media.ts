@@ -10,15 +10,18 @@ export const video: { sources: VideoSource[]; poster: string } = {
   poster: "/hero/video-poster.webp",
 };
 
-/** Imagem do topo (dupla exposição dos sócios), gerada por scripts/build-socios.mjs. */
-export const heroImage = {
-  alt: "Os dois sócios da Viver de Obra em uma obra",
-  width: 1400,
-  height: 1200,
-  avif: ["/hero/socios-hero-800.avif 800w", "/hero/socios-hero-1400.avif 1400w"],
-  webp: ["/hero/socios-hero-800.webp 800w", "/hero/socios-hero-1400.webp 1400w"],
-  fallback: "/hero/socios-hero-1400.webp",
-};
+/** Segundos de cada slide do topo (fade cruzado). */
+export const HERO_SLIDE_SECONDS = 6;
+
+/** Fotos do topo, alternando as duas obras (arquivos 1600w .avif/.webp em /public/obras). */
+export const HERO_SLIDES = [
+  { src: "/obras/dunas-douradas/14-1600" },
+  { src: "/obras/agencia-bussola/14-1600" },
+  { src: "/obras/dunas-douradas/13-1600" },
+  { src: "/obras/agencia-bussola/5-1600" },
+  { src: "/obras/dunas-douradas/11-1600" },
+  { src: "/obras/agencia-bussola/12-1600" },
+] as const;
 
 /** Foto limpa dos sócios (página Sobre). */
 export const sociosFoto = {

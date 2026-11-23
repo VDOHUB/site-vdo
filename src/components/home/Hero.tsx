@@ -1,29 +1,27 @@
 import Link from "next/link";
-import { HERO_BLUR } from "@/lib/hero-blur.generated";
-import { heroImage } from "@/lib/media";
+import { HERO_SLIDES, HERO_SLIDE_SECONDS } from "@/lib/media";
+import { HeroSlides } from "./HeroSlides";
 
 const TITLE = "Obra sem dor de cabeça.";
 
-/** Topo da Home: imagem estática (dupla exposição dos sócios) + título, texto e chamadas. Sem JS. */
+/**
+ * Topo da Home: slideshow em tela cheia (fotos das obras entregues, em fade infinito) com um
+ * escurecimento sempre presente atrás do texto e uma camada de tom que alterna entre escuro e claro.
+ */
 export function Hero() {
+  const first = HERO_SLIDES[0];
   return (
-    <section className="hero" aria-labelledby="hero-title">
-      <div className="hero-art" style={{ backgroundImage: `url(${HERO_BLUR})` }}>
-        <picture>
-          <source type="image/avif" srcSet={heroImage.avif.join(", ")} sizes="(max-width: 860px) 100vw, 48vw" />
-          <source type="image/webp" srcSet={heroImage.webp.join(", ")} sizes="(max-width: 860px) 100vw, 48vw" />
-          {/* LCP: prioridade alta, dimensões fixas (sem CLS). */}
-          <img
-            className="hero-img"
-            src={heroImage.fallback}
-            width={heroImage.width}
-            height={heroImage.height}
-            alt={heroImage.alt}
-            fetchPriority="high"
-            decoding="async"
-          />
+    <section className="hero" aria-labelledby="hero-title" style={{ ["--slide-s" as string]: `${HERO_SLIDE_SECONDS}s` }}>
+      <div className="hero-media" aria-hidden="true">
+        {/* 1º slide = LCP: no HTML, prioridade alta. Os outros chegam depois do load (HeroSlides). */}
+        <picture className="hero-slide is-first" style={{ animationDelay: "-1.2s" }}>
+          <source type="image/avif" srcSet={`${first.src}.avif`} />
+          <img src={`${first.src}.webp`} alt="" width={1600} height={1067} fetchPriority="high" decoding="async" />
         </picture>
+        <HeroSlides />
       </div>
+      <div className="hero-scrim" aria-hidden="true" />
+      <div className="hero-tone" aria-hidden="true" />
 
       <div className="hero-content">
         <p className="eyebrow hero-in">Construtora boutique · Anápolis, GO</p>

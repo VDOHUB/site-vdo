@@ -6,15 +6,13 @@ import { Hero } from "./Hero";
 afterEach(cleanup);
 
 describe("Hero", () => {
-  it("é imagem estática: sem vídeo e com a imagem dos sócios como LCP", () => {
+  it("é slideshow de fotos das obras: sem vídeo, 1º slide como LCP com prioridade alta", () => {
     const { container } = render(<Hero />);
     expect(container.querySelector("video")).toBeNull();
-    const img = container.querySelector("img.hero-img")!;
+    const img = container.querySelector(".hero-slide.is-first img")!;
     expect(img.getAttribute("fetchpriority")).toBe("high");
-    expect(img.getAttribute("alt")).toBe("Os dois sócios da Viver de Obra em uma obra");
-    expect(img.getAttribute("width")).toBe("1400");
-    const types = [...container.querySelectorAll("picture source")].map((s) => s.getAttribute("type"));
-    expect(types).toEqual(["image/avif", "image/webp"]);
+    expect(img.getAttribute("src")).toMatch(/\/obras\/dunas-douradas\/14-1600\.webp$/);
+    expect(container.querySelector(".hero-scrim")).not.toBeNull();
   });
 
   it("expõe o h1 com o texto completo de forma acessível", () => {

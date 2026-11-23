@@ -105,24 +105,36 @@ h3 { font-size: 21px; font-weight: 600; letter-spacing: -0.01em; }
 .muted-text { color: var(--mute); max-width: 52ch; }
 
 /* ---------- hero ---------- */
-.hero { position: relative; display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); grid-template-areas: "txt art"; align-items: center; max-width: 1380px; margin: 0 auto; min-height: clamp(560px, calc(100svh - var(--header-h)), 860px); }
-/* painel creme do pôster dos sócios (a imagem já traz o fundo) */
-.hero-art { grid-area: art; position: relative; aspect-ratio: 1400 / 1200; background: #f3efe6 center / cover no-repeat; border-radius: 28px; overflow: hidden; margin: 24px max(16px, calc((100vw - 1180px) / 2)) 24px 0; box-shadow: 0 30px 60px -30px rgba(0,0,0,.6); }
-.hero-img { width: 100%; height: auto; aspect-ratio: 1400 / 1200; }
-.hero-content { grid-area: txt; padding: 56px 16px clamp(40px, 6vw, 80px) max(16px, calc((100vw - 1180px) / 2)); position: relative; z-index: 1; }
-.hero-title { font-size: clamp(46px, 7vw, 104px); line-height: .96; letter-spacing: -0.035em; max-width: 10.5ch; margin: 2px 0 0; display: flex; flex-wrap: wrap; column-gap: .24em; }
+.hero { position: relative; isolation: isolate; display: flex; align-items: center; min-height: clamp(560px, calc(100svh - var(--header-h)), 820px); overflow: hidden; background: #171716; }
+.hero-media, .hero-scrim, .hero-tone { position: absolute; inset: 0; }
+.hero-media { z-index: -3; }
+.hero-slide { position: absolute; inset: 0; opacity: 0; animation: hero-fade calc(var(--slide-s) * 6) ease-in-out infinite; }
+.hero-slide img { width: 100%; height: 100%; object-fit: cover; }
+@keyframes hero-fade { 0% { opacity: 0; } 3% { opacity: 1; } 17% { opacity: 1; } 20% { opacity: 0; } 100% { opacity: 0; } }
+/* escurecimento sempre presente atrás do texto (AA), mais forte à esquerda */
+.hero-scrim { z-index: -2; background: linear-gradient(90deg, rgba(23,23,22,.94) 0%, rgba(23,23,22,.84) 38%, rgba(23,23,22,.45) 68%, rgba(23,23,22,.2) 100%); }
+/* tom que desliza entre escuro e claro (creme) devagar, só na metade direita (longe do texto) */
+.hero-tone { z-index: -1; background: linear-gradient(100deg, transparent 45%, rgba(243,239,230,.34) 100%); opacity: 0; animation: hero-tone 12s ease-in-out infinite alternate; }
+@keyframes hero-tone { to { opacity: 1; } }
+.hero-content { width: 100%; max-width: 1180px; margin: 0 auto; padding: 72px 16px clamp(48px, 7vw, 88px); }
+.hero-content > * { max-width: 40rem; }
+.hero-title { font-size: clamp(46px, 7vw, 100px); line-height: .96; letter-spacing: -0.035em; margin: 2px 0 0; display: flex; flex-wrap: wrap; column-gap: .24em; }
 .hero-word { display: inline-block; animation: hero-in .6s cubic-bezier(.2,.7,.2,1) both; }
 .hero-title > span:last-child .hero-word { color: var(--y); }
-.hero-lead { max-width: 48ch; font-size: clamp(17px, 1.6vw, 20px); line-height: 1.55; color: #e2ddd1; margin-top: clamp(20px, 2.4vw, 30px); }
+.hero-lead { max-width: 48ch; font-size: clamp(17px, 1.6vw, 20px); line-height: 1.55; color: #ece8dd; margin-top: clamp(20px, 2.4vw, 30px); }
 .hero-cta { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 32px; }
 .hero-in { animation: hero-in .6s cubic-bezier(.2,.7,.2,1) both; }
 /* Só movimento: o texto nunca começa invisível (LCP e leitura sem JS). */
 @keyframes hero-in { from { transform: translateY(10px); } }
-@media (max-width: 860px) {
-  .hero { grid-template-columns: 1fr; grid-template-areas: "art" "txt"; min-height: 0; }
-  .hero-art { margin: 16px; }
-  .hero-content { padding: 8px 16px 56px; }
+@media (max-width: 720px) {
+  .hero { align-items: flex-end; }
+  .hero-scrim { background: linear-gradient(180deg, rgba(23,23,22,.55) 0%, rgba(23,23,22,.82) 45%, rgba(23,23,22,.95) 100%); }
+  .hero-tone { display: none; }
   .hero-cta .btn { flex: 1 1 auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-slide, .hero-tone { animation: none; }
+  .hero-slide.is-first { opacity: 1; }
 }
 
 /* ---------- marquee ---------- */

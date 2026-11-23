@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
 import { EcosystemSection } from "@/components/home/EcosystemSection";
@@ -8,6 +7,7 @@ import { LiveObras } from "@/components/home/LiveObras";
 import { VideoSection } from "@/components/home/VideoSection";
 import { ValuesMarquee } from "@/components/home/ValuesMarquee";
 import { ObraGridSkeleton } from "@/components/obras/ObraGridSkeleton";
+import { sociosFoto } from "@/lib/media";
 import { localBusinessJsonLd } from "@/lib/seo";
 import { SITE } from "@/lib/site";
 
@@ -91,13 +91,11 @@ export default function Home() {
             </Link>
           </div>
           <figure className="split-media">
-            <Image
-              src="/obras/dunas-douradas/14-1600.webp"
-              alt="Sala de estar integrada do projeto residencial Dunas Douradas, executado pela Viver de Obra"
-              width={1600}
-              height={1067}
-              sizes="(max-width: 820px) 100vw, 560px"
-            />
+            <picture>
+              <source type="image/avif" srcSet={sociosFoto.avif.join(", ")} sizes="(max-width: 820px) 100vw, 560px" />
+              <source type="image/webp" srcSet={sociosFoto.webp.join(", ")} sizes="(max-width: 820px) 100vw, 560px" />
+              <img src={sociosFoto.fallback} width={sociosFoto.width} height={sociosFoto.height} alt={sociosFoto.alt} loading="lazy" decoding="async" />
+            </picture>
           </figure>
         </div>
       </section>
