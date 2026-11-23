@@ -5,14 +5,14 @@ import { ACCESS, NAV, SITE } from "@/lib/site";
 export function Footer() {
   const social = [
     { label: "Instagram", href: SITE.social.instagram },
-    { label: "Google Meu Negócio", href: SITE.social.google },
+    { label: "Nossa localização", href: SITE.social.google },
     { label: "Facebook", href: SITE.social.facebook },
   ].filter((s): s is { label: string; href: string } => Boolean(s.href));
 
   return (
     <footer className="site-footer">
       <div className="g">
-        <div>
+        <div className="brand">
           <Image src="/brand/logo-preto-amarelo.png" alt="Viver de Obra" width={54} height={46} className="logo" style={{ height: 46, width: "auto" }} />
           <p className="muted">Obra sem dor de cabeça. Construtora boutique em Anápolis, Goiás.</p>
           <p className="muted">{SITE.address}</p>
@@ -34,12 +34,11 @@ export function Footer() {
           {social.map((s) => (
             <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer">{s.label}</a>
           ))}
-          <a href={SITE.whatsappUrl()} target="_blank" rel="noopener noreferrer">WhatsApp {SITE.whatsapp}</a>
         </div>
-        <div className="copy">
-          <span>© Viver de Obra Engenharia</span>
-          <span>{SITE.hours} · {SITE.whatsapp}</span>
-        </div>
+      </div>
+      <div className="copy">
+        <span>© Viver de Obra Engenharia</span>
+        <span>{SITE.hours}</span>
       </div>
     </footer>
   );

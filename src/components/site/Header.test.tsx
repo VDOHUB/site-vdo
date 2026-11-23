@@ -37,7 +37,7 @@ describe("Header: menu Acessar", () => {
     await load();
     const btn = screen.getByRole("button", { name: /Acessar/ });
     fireEvent.click(btn);
-    fireEvent.pointerDown(screen.getByText("Área interna da equipe"));
+    fireEvent.pointerDown(screen.getByText("Salas comerciais por assinatura"));
     expect(btn.getAttribute("aria-expanded")).toBe("true");
     fireEvent.pointerDown(document.body);
     expect(btn.getAttribute("aria-expanded")).toBe("false");

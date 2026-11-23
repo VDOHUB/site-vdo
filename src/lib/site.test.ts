@@ -57,7 +57,7 @@ describe("ACCESS / VDO Club", () => {
     expect(SITE.social.instagram).toBe("https://www.instagram.com/viverdeobraconstrutora/");
     expect("youtube" in SITE.social).toBe(false);
   });
-  it("tem o Google Meu Negócio nas redes", () => {
+  it("tem o link de localização (Google) nas redes", () => {
     expect(SITE.social.google).toBe("https://g.page/viver-de-obra-engenharia");
   });
 });

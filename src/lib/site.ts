@@ -54,5 +54,4 @@ export const ACCESS: { label: string; desc: string; href: string | null }[] = [
     desc: "Arquitetos e fornecedores",
     href: process.env.NEXT_PUBLIC_VDOCLUB_URL || "https://vdoclub.viverdeobra.com/",
   },
-  { label: "Adm Viver de Obra", desc: "Área interna da equipe", href: "/admin" },
 ];
