@@ -105,9 +105,10 @@ h3 { font-size: 21px; font-weight: 600; letter-spacing: -0.01em; }
 .muted-text { color: var(--mute); max-width: 52ch; }
 
 /* ---------- hero ---------- */
-.hero { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); grid-template-areas: "txt art"; align-items: center; max-width: 1380px; margin: 0 auto; min-height: clamp(560px, calc(100svh - var(--header-h)), 860px); }
-.hero-art { grid-area: art; position: relative; aspect-ratio: 1400 / 1100; background: center / cover no-repeat; align-self: end; margin-left: -4%; }
-.hero-img { width: 100%; height: auto; aspect-ratio: 1400 / 1100; }
+.hero { position: relative; display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); grid-template-areas: "txt art"; align-items: center; max-width: 1380px; margin: 0 auto; min-height: clamp(560px, calc(100svh - var(--header-h)), 860px); }
+/* painel creme do pôster dos sócios (a imagem já traz o fundo) */
+.hero-art { grid-area: art; position: relative; aspect-ratio: 1400 / 1200; background: #f3efe6 center / cover no-repeat; border-radius: 28px; overflow: hidden; margin: 24px max(16px, calc((100vw - 1180px) / 2)) 24px 0; box-shadow: 0 30px 60px -30px rgba(0,0,0,.6); }
+.hero-img { width: 100%; height: auto; aspect-ratio: 1400 / 1200; }
 .hero-content { grid-area: txt; padding: 56px 16px clamp(40px, 6vw, 80px) max(16px, calc((100vw - 1180px) / 2)); position: relative; z-index: 1; }
 .hero-title { font-size: clamp(46px, 7vw, 104px); line-height: .96; letter-spacing: -0.035em; max-width: 10.5ch; margin: 2px 0 0; display: flex; flex-wrap: wrap; column-gap: .24em; }
 .hero-word { display: inline-block; animation: hero-in .6s cubic-bezier(.2,.7,.2,1) both; }
@@ -119,8 +120,8 @@ h3 { font-size: 21px; font-weight: 600; letter-spacing: -0.01em; }
 @keyframes hero-in { from { transform: translateY(10px); } }
 @media (max-width: 860px) {
   .hero { grid-template-columns: 1fr; grid-template-areas: "art" "txt"; min-height: 0; }
-  .hero-art { margin: 0; align-self: auto; }
-  .hero-content { padding: 0 16px 56px; margin-top: -12%; }
+  .hero-art { margin: 16px; }
+  .hero-content { padding: 8px 16px 56px; }
   .hero-cta .btn { flex: 1 1 auto; }
 }
 

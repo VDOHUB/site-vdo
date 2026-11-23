@@ -10,8 +10,8 @@ export function Hero() {
     <section className="hero" aria-labelledby="hero-title">
       <div className="hero-art" style={{ backgroundImage: `url(${HERO_BLUR})` }}>
         <picture>
-          <source type="image/avif" srcSet={heroImage.avif.join(", ")} sizes="(max-width: 860px) 100vw, 55vw" />
-          <source type="image/webp" srcSet={heroImage.webp.join(", ")} sizes="(max-width: 860px) 100vw, 55vw" />
+          <source type="image/avif" srcSet={heroImage.avif.join(", ")} sizes="(max-width: 860px) 100vw, 48vw" />
+          <source type="image/webp" srcSet={heroImage.webp.join(", ")} sizes="(max-width: 860px) 100vw, 48vw" />
           {/* LCP: prioridade alta, dimensões fixas (sem CLS). */}
           <img
             className="hero-img"

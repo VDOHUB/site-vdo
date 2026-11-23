@@ -14,7 +14,7 @@ export const video: { sources: VideoSource[]; poster: string } = {
 export const heroImage = {
   alt: "Os dois sócios da Viver de Obra em uma obra",
   width: 1400,
-  height: 1100,
+  height: 1200,
   avif: ["/hero/socios-hero-800.avif 800w", "/hero/socios-hero-1400.avif 1400w"],
   webp: ["/hero/socios-hero-800.webp 800w", "/hero/socios-hero-1400.webp 1400w"],
   fallback: "/hero/socios-hero-1400.webp",

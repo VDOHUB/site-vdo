@@ -1,2 +1,2 @@
 // Gerado por scripts/build-socios.mjs. Não editar.
-export const HERO_BLUR = "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAADwAwCdASoYABMAPu1kqU2ppaOiMAgBMB2JYwDE2CFU7EFvoxVYEwiAAP7w0nXHjRnbK5zJz1r0/D35nd2yfzQ9ByDcpeiPrOHrdIE+PX/NFqb0+2dcIGXnFXWJXylxgAA=";
+export const HERO_BLUR = "data:image/webp;base64,UklGRvgAAABXRUJQVlA4IOwAAAAQBgCdASoYABUAPu1qq1EppaOiqAqpMB2JbACdMyS0iYuHYAG2M9E95eFu/jj611+9Ld6VEbaliFAA/u/XmrvIbGL9OLPwRc7HPoyHk0TOh1vR0qXbRIs/M6orI3z8gCz5ql0DT6BsR+DJ2t08gBeOb9Q2L/8valIIF53WR2TrRxWcUwtwEqsu8Ysa3a1gVmycHBCLl3zAXrSMnG31etyFEftk4tmZNFi9nlTMYmrKuoNhmDUtxMHA9l7DW5HVU7T1vGK+19ZBfKNKjCt8f/golboUJNhQrsPy34zWx+AQF3CRkIvzJaY0vgAAAA==";

@@ -55,7 +55,9 @@ seguindo `scripts/media-manifest.json` (que também guarda o texto alternativo d
 
 As imagens dos sócios (topo da Home em dupla exposição, foto limpa da página Sobre e poster do vídeo) vêm de
 `node scripts/build-socios.mjs` (precisa de ffmpeg e do vídeo original em `HERO_SOURCE`); ele também gera
-`src/lib/hero-blur.generated.ts`.
+`src/lib/hero-blur.generated.ts`. O recorte dos sócios (`scripts/socios-matte.png`) foi gerado uma vez, só como
+ferramenta de desenvolvimento, com `@imgly/background-removal-node` (segmentação local; não faz parte do site).
+O script limpa o recorte e monta a dupla exposição (foto de obra dentro das silhuetas, painel creme com arco amarelo).
 
 O `supabase/seed.sql` repete as legendas do manifesto. Ao mudar um texto alternativo, altere os dois
 (há um teste em `src/lib/seo.test.ts` que confere se continuam iguais).
