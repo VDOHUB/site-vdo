@@ -14,7 +14,7 @@ test("Home carrega com hero em imagem, vídeo institucional, seções e sem erro
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1, name: "Obra sem dor de cabeça." })).toBeVisible();
   await expect(page.locator(".hero video")).toHaveCount(0);
-  await expect(page.locator(".hero-img")).toBeVisible();
+  await expect(page.locator(".hero-slide.is-first")).toHaveCount(1);
   await expect(page.getByRole("heading", { level: 2, name: "Conheça a Viver de Obra." })).toBeVisible();
   await expect(page.locator("a.wa-fab")).toBeVisible();
   for (const name of [
